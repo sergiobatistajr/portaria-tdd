@@ -30,6 +30,25 @@ describe("Api POST user test", () => {
     expect(body.role).toEqual(user.role);
     expect(body.id).toBeDefined();
   });
+  it("POST /user with an existing email should return 401", async () => {
+    const user = {
+      name: "John Doe",
+      email: "johndoe@example.com",
+      password: "12345678",
+      confirm_password: "12345678",
+      role: "admin",
+    };
+    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+    });
+    const body = await response.json();
+    expect(response.status).toBe(401);
+    expect(body.error.message).toBe("Email is already taken");
+  });
   it("POST /user with all fields undefined should return 401", async () => {
     const user = {
       name: "",

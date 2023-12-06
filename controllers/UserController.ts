@@ -50,6 +50,12 @@ export default class UserController {
 
     if (validUserFields.success) {
       const { name, email, role, password, status } = validUserFields.data;
+      const isEmail = (
+        await sql("SELECT email FROM portaria.user WHERE email = $1", [email])
+      ).rows[0];
+      if (isEmail) {
+        throw new Error("Email is already taken");
+      }
       const newUser = new User(id, name, email, role, status, password);
       const user = (
         await sql(
