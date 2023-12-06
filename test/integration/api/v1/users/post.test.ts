@@ -1,4 +1,12 @@
 describe("Api POST user test", () => {
+  afterAll(async () => {
+    const response = await fetch(`http://localhost:3000/api/v1/test`, {
+      method: "DELETE",
+    });
+    const bodyText = await response.text();
+    expect(response.status).toBe(200);
+    expect(bodyText).toBe("Deleted");
+  });
   it("POST /users should return 201", async () => {
     const user = {
       name: "John Doe",
