@@ -1,5 +1,6 @@
 import { randomUUID } from "crypto";
 import sql from "infra/database";
+import Password from "models/Password";
 import User from "models/User";
 import { z } from "zod";
 export default class UserController {
@@ -56,7 +57,8 @@ export default class UserController {
       if (isEmail) {
         throw new Error("Email is already taken");
       }
-      const newUser = new User(id, name, email, role, status, password);
+      const hash = await new Password().hash(password);
+      const newUser = new User(id, name, email, role, status, hash);
       const user = (
         await sql(
           "INSERT INTO portaria.user (id, name, email, password, role, status ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, role, status",
