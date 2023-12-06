@@ -1,8 +1,22 @@
 describe("Api POST user test", () => {
   beforeAll(async () => {
-    const response = await fetch(`http://localhost:3000/api/v1/test`, {
-      method: "DELETE",
-    });
+    const response = await fetch(
+      `http://localhost:3000/api/v1/test?email=${"johndoe@example.com"}`,
+      {
+        method: "DELETE",
+      },
+    );
+    const bodyText = await response.text();
+    expect(response.status).toBe(200);
+    expect(bodyText).toBe("Deleted");
+  });
+  afterAll(async () => {
+    const response = await fetch(
+      `http://localhost:3000/api/v1/test?email=${"johndoe@example.com"}`,
+      {
+        method: "DELETE",
+      },
+    );
     const bodyText = await response.text();
     expect(response.status).toBe(200);
     expect(bodyText).toBe("Deleted");
