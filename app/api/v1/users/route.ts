@@ -35,15 +35,17 @@ export async function POST(req: Request) {
       },
     );
   } catch (error) {
-    return new Response(
-      JSON.stringify({
-        error: {
-          message: error.message,
+    if (error instanceof Error) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            message: error.message,
+          },
+        }),
+        {
+          status: 401,
         },
-      }),
-      {
-        status: 401,
-      },
-    );
+      );
+    }
   }
 }
