@@ -1,18 +1,20 @@
+import webserver from "../../../../../infra/webserver";
 describe("Api POST user test", () => {
   beforeAll(async () => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/test?email=${"johndoe@example.com"}`,
+      `${webserver.host}/api/v1/test?email=${"johndoe@example.com"}`,
       {
         method: "DELETE",
       },
     );
+    console.log(webserver.host);
     const bodyText = await response.text();
     expect(response.status).toEqual(200);
     expect(bodyText).toEqual("Deleted");
   });
   afterAll(async () => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/test?email=${"johndoe@example.com"}`,
+      `${webserver.host}/api/v1/test?email=${"johndoe@example.com"}`,
       {
         method: "DELETE",
       },
@@ -29,7 +31,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -52,7 +54,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -71,7 +73,7 @@ describe("Api POST user test", () => {
       confirm_password: "",
       role: "",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -92,7 +94,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -113,7 +115,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -132,7 +134,7 @@ describe("Api POST user test", () => {
       confirm_password: "1234",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -153,7 +155,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -172,7 +174,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "admin",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -191,7 +193,7 @@ describe("Api POST user test", () => {
       confirm_password: "12345678",
       role: "dasds",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/users`, {
+    const response = await fetch(`${webserver.host}/api/v1/users`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

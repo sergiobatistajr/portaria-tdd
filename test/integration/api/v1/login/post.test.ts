@@ -1,3 +1,5 @@
+import webserver from "infra/webserver";
+
 describe("Api POST for /login endpoint", () => {
   beforeAll(async () => {
     const user = {
@@ -7,7 +9,7 @@ describe("Api POST for /login endpoint", () => {
       password: "123456789",
       confirm_password: "123456789",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/test`, {
+    const response = await fetch(`${webserver.host}/api/v1/test`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -18,7 +20,7 @@ describe("Api POST for /login endpoint", () => {
   });
   afterAll(async () => {
     const response = await fetch(
-      `http://localhost:3000/api/v1/test?email=johndoe@teste.com`,
+      `${webserver.host}/api/v1/test?email=johndoe@teste.com`,
       {
         method: "DELETE",
       },
@@ -32,7 +34,7 @@ describe("Api POST for /login endpoint", () => {
       email: "johndoe@teste.com",
       password: "123456789",
     };
-    const response = await fetch(`http://localhost:3000/api/v1/login`, {
+    const response = await fetch(`${webserver.host}/api/v1/login`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

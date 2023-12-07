@@ -1,6 +1,8 @@
+import webserver from "infra/webserver";
+
 describe("API Tests", () => {
   it("GET /status should return 200", async () => {
-    const response = await fetch(`http://localhost:3000/api/v1/status`);
+    const response = await fetch(`${webserver.host}/api/v1/status`);
     expect(response.status).toEqual(200);
     const body = await response.json();
     expect(body.updated_at).toBeDefined();
