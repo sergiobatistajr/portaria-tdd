@@ -1,34 +1,22 @@
-import UserController from "controllers/UserController";
+import validator from "models/validator";
+import user from "models/user";
+import { UserJSON } from "models/definitions";
+import { randomUUID } from "node:crypto";
 
 export async function POST(req: Request) {
-  const {
-    email,
-    name,
-    role,
-    password,
-    confirm_password,
-  }: {
-    email: string;
-    name: string;
-    role: string;
-    password: string;
-    confirm_password: string;
-  } = await req.json();
+  const userParsed: UserJSON = await req.json();
   try {
-    const user = await new UserController().registerUser({
-      name: name.trim(),
-      email: email.trim(),
-      role: role.trim(),
-      password: password.trim(),
-      confirm_password: confirm_password.trim(),
-    });
+    const newUser = tryCreateUser(userParsed);
+    const email = await user.findByEmail(newUser?.email!);
+    if (email) throw new Error("Email is already taken");
+    const result = await user.create(newUser!);
     return new Response(
       JSON.stringify({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        status: user.status,
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        role: result.role,
+        status: result.status,
       }),
       {
         status: 201,
@@ -47,5 +35,29 @@ export async function POST(req: Request) {
         },
       );
     }
+  }
+}
+
+function tryCreateUser(user: any) {
+  try {
+    const id = randomUUID();
+    const status = "active";
+    const isValid = validator.userCreate({
+      id,
+      email: user.email,
+      name: user.name,
+      password: user.password,
+      role: user.role,
+      confirmPassword: user.confirm_password,
+      status,
+    });
+    if (isValid.success) {
+      return isValid.data;
+    } else if (isValid.error) {
+      const errors = isValid.error.issues.map((issue) => issue.message);
+      throw new Error(errors.join(", "));
+    }
+  } catch (error) {
+    if (error instanceof Error) throw new Error(error.message);
   }
 }
