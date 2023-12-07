@@ -1,5 +1,6 @@
-import UserController from "controllers/UserController";
+import { randomUUID } from "crypto";
 import database from "infra/database";
+import user from "models/user";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
@@ -17,29 +18,28 @@ export async function POST(req: Request) {
     name,
     role,
     password,
-    confirm_password,
   }: {
     email: string;
     name: string;
     role: string;
     password: string;
-    confirm_password: string;
   } = await req.json();
   try {
-    const user = await new UserController().registerUser({
-      name: name.trim(),
-      email: email.trim(),
-      role: role.trim(),
-      password: password.trim(),
-      confirm_password: confirm_password.trim(),
+    const result = await user.create({
+      name: name,
+      email: email,
+      role: role as any,
+      password: password,
+      id: randomUUID(),
+      status: "active",
     });
     return new Response(
       JSON.stringify({
-        id: user.id,
-        name: user.name,
-        email: user.email,
-        role: user.role,
-        status: user.status,
+        id: result.id,
+        name: result.name,
+        email: result.email,
+        role: result.role,
+        status: result.status,
       }),
       {
         status: 201,
