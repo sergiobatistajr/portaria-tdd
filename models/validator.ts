@@ -29,7 +29,17 @@ function userCreate(inputFields: UserCreate) {
     .safeParse(inputFields);
   return validInputFields;
 }
+function userLogin(input: { email: string; password: string }) {
+  const validated = z
+    .object({
+      email: emailValidator,
+      password: passwordValidator,
+    })
+    .safeParse(input);
+  return validated;
+}
 
 export default Object.freeze({
   userCreate,
+  userLogin,
 });
