@@ -1,5 +1,6 @@
 import validator from "models/validator";
 import user from "models/user";
+import password from "models/password";
 import { UserJSON } from "models/definitions";
 import { randomUUID } from "node:crypto";
 
@@ -7,21 +8,24 @@ export async function POST(req: Request) {
   const userParsed: UserJSON = await req.json();
   try {
     const newUser = tryCreateUser(userParsed);
-    const email = await user.findByEmail(newUser?.email!);
-    if (email) throw new Error("Email is already taken");
-    const result = await user.create(newUser!);
-    return new Response(
-      JSON.stringify({
-        id: result.id,
-        name: result.name,
-        email: result.email,
-        role: result.role,
-        status: result.status,
-      }),
-      {
-        status: 201,
-      },
-    );
+    if (newUser) {
+      const email = await user.findByEmail(newUser.email);
+      if (email) throw new Error("Email is already taken");
+      newUser.password = await password.hash(newUser.password);
+      const result = await user.create(newUser);
+      return new Response(
+        JSON.stringify({
+          id: result.id,
+          name: result.name,
+          email: result.email,
+          role: result.role,
+          status: result.status,
+        }),
+        {
+          status: 201,
+        },
+      );
+    }
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
