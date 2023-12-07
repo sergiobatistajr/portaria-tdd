@@ -1,11 +1,11 @@
 import UserController from "controllers/UserController";
-import sql from "infra/database";
+import database from "infra/database";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const email = searchParams.get("email");
-  await sql("DELETE FROM portaria.user where email = $1", [email]);
+  await database.sql("DELETE FROM portaria.user where email = $1", [email]);
   return new Response("Deleted", {
     status: 200,
   });

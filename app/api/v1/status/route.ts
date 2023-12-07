@@ -1,13 +1,15 @@
-import sql from "infra/database";
+import database from "infra/database";
 
 export async function GET() {
   const updateAt = new Date();
-  const databaseVersion = (await sql("SHOW server_version;")).rows[0]
+  const databaseVersion = (await database.sql("SHOW server_version;")).rows[0]
     .server_version;
-  const databaseMaxConnections = (await sql("SHOW max_connections;")).rows[0]
-    .max_connections;
+  const databaseMaxConnections = (await database.sql("SHOW max_connections;"))
+    .rows[0].max_connections;
   const databaseCurrentConnections = (
-    await sql("SELECT count(*) FROM pg_stat_activity WHERE state = 'active';")
+    await database.sql(
+      "SELECT count(*) FROM pg_stat_activity WHERE state = 'active';",
+    )
   ).rows[0].count;
 
   return new Response(

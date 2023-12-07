@@ -1,5 +1,5 @@
 import { randomUUID } from "crypto";
-import sql from "infra/database";
+import database from "infra/database";
 import Password from "models/Password";
 import User from "models/User";
 import { z } from "zod";
@@ -52,7 +52,9 @@ export default class UserController {
     if (validUserFields.success) {
       const { name, email, role, password, status } = validUserFields.data;
       const isEmail = (
-        await sql("SELECT email FROM portaria.user WHERE email = $1", [email])
+        await database.sql("SELECT email FROM portaria.user WHERE email = $1", [
+          email,
+        ])
       ).rows[0];
       if (isEmail) {
         throw new Error("Email is already taken");
@@ -60,7 +62,7 @@ export default class UserController {
       const hash = await new Password().hash(password);
       const newUser = new User(id, name, email, role, status, hash);
       const user = (
-        await sql(
+        await database.sql(
           "INSERT INTO portaria.user (id, name, email, password, role, status ) VALUES ($1, $2, $3, $4, $5, $6) RETURNING id, name, email, role, status",
           [
             newUser.id,
