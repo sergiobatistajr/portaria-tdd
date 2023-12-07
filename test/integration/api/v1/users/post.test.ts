@@ -7,8 +7,8 @@ describe("Api POST user test", () => {
       },
     );
     const bodyText = await response.text();
-    expect(response.status).toBe(200);
-    expect(bodyText).toBe("Deleted");
+    expect(response.status).toEqual(200);
+    expect(bodyText).toEqual("Deleted");
   });
   afterAll(async () => {
     const response = await fetch(
@@ -18,8 +18,8 @@ describe("Api POST user test", () => {
       },
     );
     const bodyText = await response.text();
-    expect(response.status).toBe(200);
-    expect(bodyText).toBe("Deleted");
+    expect(response.status).toEqual(200);
+    expect(bodyText).toEqual("Deleted");
   });
   it("POST /users should return 201", async () => {
     const user = {
@@ -38,7 +38,7 @@ describe("Api POST user test", () => {
     });
     const body = await response.json();
     console.log(body);
-    expect(response.status).toBe(201);
+    expect(response.status).toEqual(201);
     expect(body.email).toEqual(user.email);
     expect(body.name).toEqual(user.name);
     expect(body.role).toEqual(user.role);
@@ -60,8 +60,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe("Email is already taken");
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual("Email is already taken");
   });
   it("POST /user with all fields undefined should return 401", async () => {
     const user = {
@@ -79,8 +79,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe(
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual(
       "Name is required, Last name is required, Email is invalid, Password is weak, Confirm password is weak, Invalid enum value. Expected 'admin' | 'user' | 'report', received ''",
     );
   });
@@ -100,8 +100,10 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe("Name is required, Last name is required");
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual(
+      "Name is required, Last name is required",
+    );
   });
   it("POST /user without last name should return 401", async () => {
     const user = {
@@ -119,8 +121,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe("Last name is required");
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual("Last name is required");
   });
   it("POST /user with weak password should return 401", async () => {
     const user = {
@@ -138,8 +140,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe(
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual(
       "Password is weak, Confirm password is weak",
     );
   });
@@ -159,8 +161,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe("Email is invalid");
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual("Email is invalid");
   });
   it("POST /user with diff password and confirm_password should return 401", async () => {
     const user = {
@@ -178,8 +180,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe("Passwords do not match");
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual("Passwords do not match");
   });
   it("POST /user with invalid role return 401", async () => {
     const user = {
@@ -197,8 +199,8 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    expect(response.status).toBe(401);
-    expect(body.error.message).toBe(
+    expect(response.status).toEqual(401);
+    expect(body.error.message).toEqual(
       "Invalid enum value. Expected 'admin' | 'user' | 'report', received 'dasds'",
     );
   });
