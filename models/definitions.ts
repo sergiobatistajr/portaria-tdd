@@ -6,13 +6,10 @@ export type User = {
   password: string;
   role: "admin" | "user" | "report";
 };
-export type UserJSON = {
+export type CreateUserJSON = {
   email: string;
   name: string;
   role: string;
   password: string;
   confirm_password: string;
 };
-export type UserCreate = {
-  confirmPassword: string;
-} & User;
