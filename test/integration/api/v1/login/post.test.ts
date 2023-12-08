@@ -36,13 +36,13 @@ describe("Api POST for /login endpoint", () => {
     };
     const response = await fetch(`${webserver.host}/api/v1/login`, {
       method: "POST",
-      headers: {
+      headers: new Headers({
         "Content-Type": "application/json",
-      },
+      }),
       body: JSON.stringify(loginUser),
     });
-    const bodyText = await response.text();
+
     expect(response.status).toEqual(200);
-    expect(bodyText).toEqual("Deu certo");
+    expect(response.headers.getSetCookie()[0].split("=")[0]).toEqual("auth");
   });
 });

@@ -1,6 +1,7 @@
 import validator from "models/validator";
 import user from "models/user";
 import Password from "models/password";
+import jwt from "models/jwt";
 export async function POST(req: Request) {
   const loginParsed = await req.json();
   try {
@@ -11,8 +12,12 @@ export async function POST(req: Request) {
       if (!user) throw new Error("Invalid credentials");
       const match = await Password.verify(isUser.password, password);
       if (!match) throw new Error("Invalid credentials");
-      return new Response("Deu certo", {
+      const token = jwt.sign({ id: isUser.id, role: isUser.role });
+      return new Response(undefined, {
         status: 200,
+        headers: new Headers({
+          "Set-Cookie": `auth=${token}; HttpOnly; Secure; SameSite=Strict`,
+        }),
       });
     }
   } catch (error) {

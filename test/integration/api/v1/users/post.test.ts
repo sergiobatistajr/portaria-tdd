@@ -38,7 +38,6 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
-    console.log(body);
     expect(response.status).toEqual(201);
     expect(body.email).toEqual(user.email);
     expect(body.name).toEqual(user.name);
