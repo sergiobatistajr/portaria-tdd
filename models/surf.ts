@@ -70,25 +70,25 @@ function getAuthToken(req: Request) {
 /**
  * Cria uma nova resposta HTTP.
  *
- * @param body - O corpo da resposta, que pode ser uma string, undefined ou null.
+ * @param body - O corpo da resposta, que é um objeto que será convertido em uma string JSON.
  * @param status - O código de status HTTP da resposta.
  * @param authToken - Um token de autenticação opcional. Se fornecido, um cabeçalho "Set-Cookie" será adicionado à resposta.
  * @returns Uma nova resposta HTTP com o corpo, status e cabeçalhos especificados.
  */
 function response(
-  body: string | undefined | null,
+  body: string | Record<string, any> | undefined | null,
   status: number,
   authToken?: string,
 ): Response {
   if (authToken) {
-    return new Response(body, {
+    return new Response(JSON.stringify(body), {
       status: status,
       headers: new Headers({
         "Set-Cookie": `auth=${authToken}; HttpOnly; Secure; SameSite=Strict`,
       }),
     });
   }
-  return new Response(body, {
+  return new Response(JSON.stringify(body), {
     status: status,
   });
 }
