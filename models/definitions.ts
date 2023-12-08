@@ -27,3 +27,12 @@ export type Guest = {
   departureDate: Date;
   status: string;
 };
+export type createVehicleEntryJson = {
+  name: string;
+  entry_date: Date;
+  plate: string;
+  model: string;
+  pax: number;
+  apartment?: number;
+  observation?: string;
+};
