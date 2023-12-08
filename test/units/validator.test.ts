@@ -1,6 +1,6 @@
 import validator from "../../models/validator";
 
-describe("Validator Tests", () => {
+describe("Validator Create User Tests", () => {
   it("should return valid input fields", () => {
     const inputFields = {
       id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
@@ -149,5 +149,34 @@ describe("Validator Tests", () => {
       return;
     } else if (result.error)
       expect(result.error.issues[0].message).toEqual("Invalid uuid");
+  });
+});
+
+describe("Validator Login User Tests", () => {
+  it("should return an error when email is not valid", () => {
+    const inputFields = {
+      email: "johndoeexample.com",
+      password: "password123",
+    };
+    const result = validator.userLogin(inputFields);
+
+    expect(result.success).toEqual(false);
+    if (result.success) {
+      return;
+    } else if (result.error)
+      expect(result.error.issues[0].message).toEqual("Email is invalid");
+  });
+  it("should return an error when password is weak", () => {
+    const inputFields = {
+      email: "johndoe@example.com",
+      password: "1234",
+    };
+    const result = validator.userLogin(inputFields);
+
+    expect(result.success).toEqual(false);
+    if (result.success) {
+      return;
+    } else if (result.error)
+      expect(result.error.issues[0].message).toEqual("Password is weak");
   });
 });
