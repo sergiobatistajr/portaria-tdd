@@ -1,4 +1,4 @@
-import webserver from "infra/webserver";
+import webserver from "../.../../../../../../infra/webserver";
 
 describe("API Tests", () => {
   it("GET /status should return 200", async () => {
