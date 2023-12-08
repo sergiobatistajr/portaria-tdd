@@ -1,8 +1,5 @@
 {
   "name": "portaria-tdd",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
   "type": "module",
   "scripts": {
     "dev": "npm run services:up && next dev",
@@ -14,9 +11,6 @@
     "lint:check": "prettier --check .",
     "lint:fix": "prettier --write ."
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
   "dependencies": {
     "argon2": "^0.31.2",
     "next": "^14.0.3",
