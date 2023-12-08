@@ -77,7 +77,7 @@ const apartmentsValidator = z.coerce
     },
   )
   .optional();
-const entryDateValidator = z.date().refine(
+const entryDateValidator = z.coerce.date().refine(
   (date) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
