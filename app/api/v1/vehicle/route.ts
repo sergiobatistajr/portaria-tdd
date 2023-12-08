@@ -10,9 +10,7 @@ export async function POST(req: Request) {
     const auth = surf.getAuthToken(req);
     const decoded = jwt.verify(auth);
     const vehicle = tryCreateVehicle(vehicleJson, decoded.id);
-    return new Response(undefined, {
-      status: 200,
-    });
+    return surf.response(vehicle, 200);
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
