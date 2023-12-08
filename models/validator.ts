@@ -1,5 +1,4 @@
 import { z } from "zod";
-import { UserCreate } from "./definitions";
 
 const idValidator = z.string().uuid();
 const statusValidator = z.enum(["active", "deactivate"]);
@@ -12,7 +11,7 @@ const passwordValidator = z.string().min(8, "Password is weak");
 const confirmPasswordValidator = z.string().min(8, "Confirm password is weak");
 const roleValidator = z.enum(["admin", "user", "report"]);
 
-function userCreate(inputFields: UserCreate) {
+function userCreate(inputFields: any) {
   const validInputFields = z
     .object({
       id: idValidator,
@@ -29,7 +28,7 @@ function userCreate(inputFields: UserCreate) {
     .safeParse(inputFields);
   return validInputFields;
 }
-function userLogin(input: { email: string; password: string }) {
+function userLogin(input: any) {
   const validated = z
     .object({
       email: emailValidator,
