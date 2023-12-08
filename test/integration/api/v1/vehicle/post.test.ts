@@ -23,8 +23,6 @@ describe("API for create Vehicle", () => {
       token,
       body: vehicle,
     });
-    const body = await response.json();
-    console.log(body);
     expect(response.status).toEqual(200);
   });
 });
