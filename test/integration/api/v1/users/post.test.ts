@@ -7,7 +7,6 @@ describe("Api POST user test", () => {
         method: "DELETE",
       },
     );
-    console.log(webserver.host);
     const bodyText = await response.text();
     expect(response.status).toEqual(200);
     expect(bodyText).toEqual("Deleted");
