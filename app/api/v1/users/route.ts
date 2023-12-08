@@ -1,11 +1,11 @@
 import validator from "models/validator";
 import user from "models/user";
 import password from "models/password";
-import { UserJSON } from "models/definitions";
+import { CreateUserJSON } from "models/definitions";
 import { randomUUID } from "node:crypto";
 
 export async function POST(req: Request) {
-  const userParsed: UserJSON = await req.json();
+  const userParsed = await req.json();
   try {
     const newUser = tryCreateUser(userParsed);
     if (newUser) {
@@ -42,19 +42,10 @@ export async function POST(req: Request) {
   }
 }
 
-function tryCreateUser(user: any) {
+function tryCreateUser(data: CreateUserJSON) {
   try {
-    const id = randomUUID();
-    const status = "active";
-    const isValid = validator.userCreate({
-      id,
-      email: user.email,
-      name: user.name,
-      password: user.password,
-      role: user.role,
-      confirmPassword: user.confirm_password,
-      status,
-    });
+    const user = generateUser(data);
+    const isValid = validator.userCreate(user);
     if (isValid.success) {
       return isValid.data;
     } else if (isValid.error) {
@@ -64,4 +55,17 @@ function tryCreateUser(user: any) {
   } catch (error) {
     if (error instanceof Error) throw new Error(error.message);
   }
+}
+
+function generateUser(data: CreateUserJSON) {
+  const user = {
+    id: randomUUID(),
+    status: "active",
+    email: data.email,
+    name: data.name,
+    password: data.password,
+    role: data.role,
+    confirmPassword: data.confirm_password,
+  };
+  return user;
 }
