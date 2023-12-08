@@ -1,6 +1,7 @@
 import { randomUUID } from "crypto";
 import database from "infra/database";
 import user from "models/user";
+import Password from "models/password";
 import { NextRequest } from "next/server";
 
 export async function DELETE(req: NextRequest) {
@@ -25,11 +26,12 @@ export async function POST(req: Request) {
     password: string;
   } = await req.json();
   try {
+    const hash = await Password.hash(password);
     const result = await user.create({
       name: name,
       email: email,
       role: role as any,
-      password: password,
+      password: hash,
       id: randomUUID(),
       status: "active",
     });
