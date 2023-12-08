@@ -1,3 +1,11 @@
+/**
+ * Realiza uma requisição HTTP POST para a URL especificada.
+ *
+ * @param url - A URL para a qual a requisição será enviada.
+ * @param initConfig - Um objeto de configuração que pode conter um token opcional e o corpo da requisição.
+ *                     O corpo da requisição é um objeto que será convertido em uma string JSON e enviado como o corpo da requisição HTTP POST.
+ * @returns Uma Promise que resolve para a resposta da requisição HTTP POST.
+ */
 async function post(
   url: string,
   initConfig: {
@@ -22,6 +30,13 @@ async function post(
     body: JSON.stringify(initConfig.body),
   });
 }
+/**
+ * Realiza uma requisição HTTP GET para a URL especificada.
+ *
+ * @param url - A URL para a qual a requisição será enviada.
+ * @param initConfig - Um objeto de configuração que pode conter um token opcional.
+ * @returns Uma Promise que resolve para a resposta da requisição HTTP GET.
+ */
 async function get(
   url: string,
   initConfig: {
@@ -43,13 +58,43 @@ async function get(
     }),
   });
 }
-
+/**
+ * Obtém o token de autenticação de uma requisição HTTP.
+ *
+ * @param req - A requisição HTTP de onde o token de autenticação será obtido.
+ * @returns O token de autenticação obtido do cabeçalho "Set-Cookie" da requisição.
+ */
 function getAuthToken(req: Request) {
   return req.headers.getSetCookie()[0].split(";")[0].split("=")[1];
 }
-
+/**
+ * Cria uma nova resposta HTTP.
+ *
+ * @param body - O corpo da resposta, que pode ser uma string, undefined ou null.
+ * @param status - O código de status HTTP da resposta.
+ * @param authToken - Um token de autenticação opcional. Se fornecido, um cabeçalho "Set-Cookie" será adicionado à resposta.
+ * @returns Uma nova resposta HTTP com o corpo, status e cabeçalhos especificados.
+ */
+function response(
+  body: string | undefined | null,
+  status: number,
+  authToken?: string,
+): Response {
+  if (authToken) {
+    return new Response(body, {
+      status: status,
+      headers: new Headers({
+        "Set-Cookie": `auth=${authToken}; HttpOnly; Secure; SameSite=Strict`,
+      }),
+    });
+  }
+  return new Response(body, {
+    status: status,
+  });
+}
 export default Object.freeze({
   post,
   get,
   getAuthToken,
+  response,
 });
