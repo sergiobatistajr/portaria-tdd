@@ -9,7 +9,7 @@ function sign(payload: { id: string; role: string }) {
   return token;
 }
 
-function verify<T>(token: string): T {
+function verify<T = { id: string; role: string }>(token: string): T {
   return jwt.verify(token, jwtSecret) as T;
 }
 
