@@ -16,7 +16,7 @@ describe("Api POST for /login endpoint", () => {
       },
       body: JSON.stringify(user),
     });
-    expect(response.status).toBe(201);
+    expect(response.status).toEqual(201);
   });
   afterAll(async () => {
     const response = await fetch(
@@ -26,8 +26,8 @@ describe("Api POST for /login endpoint", () => {
       },
     );
     const bodyText = await response.text();
-    expect(response.status).toBe(200);
-    expect(bodyText).toBe("Deleted");
+    expect(response.status).toEqual(200);
+    expect(bodyText).toEqual("Deleted");
   });
   it("POST /login should return 200", async () => {
     const loginUser = {
@@ -41,6 +41,8 @@ describe("Api POST for /login endpoint", () => {
       },
       body: JSON.stringify(loginUser),
     });
-    expect(response.status).toBe(200);
+    const bodyText = await response.text();
+    expect(response.status).toEqual(200);
+    expect(bodyText).toEqual("Deu certo");
   });
 });
