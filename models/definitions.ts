@@ -13,3 +13,17 @@ export type CreateUserJSON = {
   password: string;
   confirm_password: string;
 };
+
+export type Guest = {
+  id: string;
+  name: string;
+  entryDate: Date;
+  plate: string;
+  model: string;
+  pax: number;
+  apartment: number;
+  createdBy: string;
+  observation: string;
+  departureDate: Date;
+  status: string;
+};
