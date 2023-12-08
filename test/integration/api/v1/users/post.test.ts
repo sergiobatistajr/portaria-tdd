@@ -38,11 +38,18 @@ describe("Api POST user test", () => {
       body: JSON.stringify(user),
     });
     const body = await response.json();
+    const expectedBodySchema = {
+      id: expect.any(String),
+      email: expect.any(String),
+      name: expect.any(String),
+      role: expect.any(String),
+      status: expect.any(String),
+    };
+    expect(body).toEqual(expectedBodySchema);
     expect(response.status).toEqual(201);
     expect(body.email).toEqual(user.email);
     expect(body.name).toEqual(user.name);
     expect(body.role).toEqual(user.role);
-    expect(body.id).toBeDefined();
   });
   it("POST /user with an existing email should return 401", async () => {
     const user = {
