@@ -2,7 +2,7 @@ import webserver from "../.../../../../../../infra/webserver";
 describe("Api POST user test", () => {
   beforeAll(async () => {
     const response = await fetch(
-      `${webserver.host}/api/v1/test?email=${"johndoe@example.com"}`,
+      `${webserver.host}/api/v1/test?email=${"johndoe@login.com"}`,
       {
         method: "DELETE",
       },
@@ -13,7 +13,7 @@ describe("Api POST user test", () => {
   });
   afterAll(async () => {
     const response = await fetch(
-      `${webserver.host}/api/v1/test?email=${"johndoe@example.com"}`,
+      `${webserver.host}/api/v1/test?email=${"johndoe@login.com"}`,
       {
         method: "DELETE",
       },
@@ -25,7 +25,7 @@ describe("Api POST user test", () => {
   it("POST /users should return 201", async () => {
     const user = {
       name: "John Doe",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "12345678",
       confirm_password: "12345678",
       role: "admin",
@@ -54,7 +54,7 @@ describe("Api POST user test", () => {
   it("POST /user with an existing email should return 401", async () => {
     const user = {
       name: "John Doe",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "12345678",
       confirm_password: "12345678",
       role: "admin",
@@ -94,7 +94,7 @@ describe("Api POST user test", () => {
   it("POST /user with small name should return 401", async () => {
     const user = {
       name: "jo",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "12345678",
       confirm_password: "12345678",
       role: "admin",
@@ -115,7 +115,7 @@ describe("Api POST user test", () => {
   it("POST /user without last name should return 401", async () => {
     const user = {
       name: "john",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "12345678",
       confirm_password: "12345678",
       role: "admin",
@@ -134,7 +134,7 @@ describe("Api POST user test", () => {
   it("POST /user with weak password should return 401", async () => {
     const user = {
       name: "john doe",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "1234",
       confirm_password: "1234",
       role: "admin",
@@ -174,7 +174,7 @@ describe("Api POST user test", () => {
   it("POST /user with diff password and confirm_password should return 401", async () => {
     const user = {
       name: "john doe",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "1234213231678",
       confirm_password: "12345678",
       role: "admin",
@@ -193,7 +193,7 @@ describe("Api POST user test", () => {
   it("POST /user with invalid role return 401", async () => {
     const user = {
       name: "john doe",
-      email: "johndoe@example.com",
+      email: "johndoe@login.com",
       password: "12345678",
       confirm_password: "12345678",
       role: "dasds",

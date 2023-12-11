@@ -5,7 +5,7 @@ function createUser() {
   const user = {
     name: "John Doe",
     role: "admin",
-    email: "johndoe@teste.com",
+    email: "johndoe@vehicle.com",
     password: "123456789",
     confirm_password: "123456789",
   };
@@ -13,7 +13,7 @@ function createUser() {
 }
 function loginUser() {
   const user = {
-    email: "johndoe@teste.com",
+    email: "johndoe@vehicle.com",
     password: "123456789",
   };
   return surf.post(`${webserver.host}/api/v1/login`, { body: user });
@@ -23,8 +23,21 @@ function deleteUser() {
     method: "DELETE",
   });
 }
+function deleteGuest(plate: string = "") {
+  return fetch(`${webserver.host}/api/v1/vehicle?plate=${plate}`, {
+    method: "DELETE",
+  });
+}
+function createVehicle(vehicle: any, token: string) {
+  return surf.post(`${webserver.host}/api/v1/vehicle`, {
+    body: vehicle,
+    token,
+  });
+}
 export default Object.freeze({
+  createVehicle,
   createUser,
   loginUser,
   deleteUser,
+  deleteGuest,
 });

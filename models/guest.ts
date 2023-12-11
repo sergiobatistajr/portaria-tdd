@@ -1,5 +1,6 @@
 import database from "infra/database";
 import { CreateVehicleEntry } from "./definitions";
+
 async function entryVehicle(vehicle: CreateVehicleEntry) {
   const result = (
     await database.sql(
@@ -30,13 +31,19 @@ async function findByPlateAndStatus(plate: string, status: string = "inside") {
   ).rows[0];
   return result;
 }
-async function deleteGuestWPlate(plate: string) {
-  return await database.sql("DELETE FROM portaria.guest WHERE plate = $1", [
-    plate,
-  ]);
+
+async function deleteGuestWPlateAndStatus(
+  plate: string,
+  status: string = "inside",
+) {
+  return await database.sql(
+    "DELETE FROM portaria.guest WHERE plate = $1 AND status = $2",
+    [plate, status],
+  );
 }
+
 export default Object.freeze({
   entryVehicle,
   findByPlateAndStatus,
-  deleteGuestWPlate,
+  deleteGuestWPlateAndStatus,
 });

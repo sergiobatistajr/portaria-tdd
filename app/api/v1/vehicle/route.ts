@@ -4,6 +4,7 @@ import { CreateVehicleEntryJson } from "models/definitions";
 import { randomUUID } from "node:crypto";
 import auth from "models/auth";
 import guest from "models/guest";
+import { NextRequest } from "next/server";
 
 export async function POST(req: Request) {
   try {
@@ -15,6 +16,31 @@ export async function POST(req: Request) {
     const vehicle = await tryCreateVehicle(vehicleJson, isAuthenticated.id);
     const deu = await guest.entryVehicle(vehicle!);
     return surf.response(deu, 200);
+  } catch (error) {
+    if (error instanceof Error) {
+      return new Response(
+        JSON.stringify({
+          error: {
+            message: error.message,
+          },
+        }),
+        {
+          status: 401,
+        },
+      );
+    }
+  }
+}
+
+export async function DELETE(req: NextRequest) {
+  try {
+    const searchParams = req.nextUrl.searchParams;
+    const plate = searchParams.get("plate");
+    console.log(plate);
+    await guest.deleteGuestWPlateAndStatus(plate!);
+    return new Response("Deleted", {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
