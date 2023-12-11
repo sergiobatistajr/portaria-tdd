@@ -18,7 +18,7 @@ describe("API for create Vehicle", () => {
     expect(resLoginUser.status).toEqual(200);
     token = resLoginUser.headers.get("Set-Cookie")?.split("=")[1].split(";")[0];
   });
-  afterEach(async () => {
+  afterAll(async () => {
     await testHelper.deleteGuest(vehicle.plate);
     await testHelper.deleteUser();
   });
@@ -27,5 +27,20 @@ describe("API for create Vehicle", () => {
     const res = await testHelper.createVehicle(vehicle, token!);
     console.log(await res.json());
     expect(res.status).toEqual(200);
+  });
+  it("POST /vehicle should return 401", async () => {
+    const res = await testHelper.createVehicle(
+      vehicle,
+      "diahsodhashudphasphaduiahsiuhd;",
+    );
+    const body = await res.json();
+    expect(res.status).toEqual(401);
+    expect(body.error.message).toEqual("jwt malformed");
+  });
+  it("POST /vehicle should return 401", async () => {
+    const res = await testHelper.createVehicle(vehicle, token!);
+    const body = await res.json();
+    expect(res.status).toEqual(401);
+    expect(body.error.message).toEqual("Visitante já está dentro");
   });
 });
