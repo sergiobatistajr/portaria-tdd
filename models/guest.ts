@@ -21,6 +21,17 @@ async function entryVehicle(vehicle: CreateVehicleEntry) {
   return result;
 }
 
+async function findByPlateAndStatus(plate: string, status: string = "inside") {
+  const result = (
+    await database.sql(
+      "SELECT * FROM portaria.guest WHERE plate = $1 AND status = $2",
+      [plate, status],
+    )
+  ).rows[0];
+  return result;
+}
+
 export default Object.freeze({
   entryVehicle,
+  findByPlateAndStatus,
 });

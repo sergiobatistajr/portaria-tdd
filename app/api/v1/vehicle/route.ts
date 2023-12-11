@@ -13,6 +13,10 @@ export async function POST(req: Request) {
       return surf.response("Não autorizado", 401);
     }
     const vehicle = tryCreateVehicle(vehicleJson, isAuthenticated.id);
+    const findGuest = await guest.findByPlateAndStatus(vehicle?.plate!);
+    if (findGuest) {
+      throw new Error("Visitante já está dentro");
+    }
     const deu = await guest.entryVehicle(vehicle!);
     return surf.response(deu, 200);
   } catch (error) {
