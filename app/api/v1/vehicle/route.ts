@@ -71,9 +71,15 @@ async function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
   try {
     const result = validator.createVehicleEntry(dataToBeParsed);
     if (result.success) {
-      const findGuest = await guest.findByPlateAndStatus(result.data.plate);
-      if (findGuest) {
-        throw new Error("Visitante já está dentro");
+      const { plate, name } = result.data;
+      const isGuest = await guest.findByNameAndStatus(name, "inside");
+
+      if (isGuest) {
+        const isPlate = await guest.findByPlateAndStatus(plate, "inside");
+
+        if (isPlate) {
+          throw new Error("Visitante já está dentro");
+        }
       }
       return result.data;
     } else if (result.error) {

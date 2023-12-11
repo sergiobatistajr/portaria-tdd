@@ -31,6 +31,15 @@ async function findByPlateAndStatus(plate: string, status: string = "inside") {
   ).rows[0];
   return result;
 }
+async function findByNameAndStatus(name: string, status: string = "inside") {
+  const result = (
+    await database.sql(
+      "SELECT * FROM portaria.guest WHERE name = $1 AND status = $2",
+      [name, status],
+    )
+  ).rows[0];
+  return result;
+}
 
 async function deleteGuestWPlateAndStatus(
   plate: string,
@@ -46,4 +55,5 @@ export default Object.freeze({
   entryVehicle,
   findByPlateAndStatus,
   deleteGuestWPlateAndStatus,
+  findByNameAndStatus,
 });
