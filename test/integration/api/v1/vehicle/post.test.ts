@@ -20,6 +20,7 @@ describe("API for create Vehicle", () => {
   });
   afterEach(async () => {
     await testHelper.deleteGuest(vehicle.plate);
+    await testHelper.deleteUser();
   });
 
   it("POST /vehicle should return 200", async () => {

@@ -1,14 +1,14 @@
 import webserver from "../../../../../infra/webserver";
 import surf from "../../../../../models/surf";
 
+const user = {
+  name: "John Doe",
+  role: "admin",
+  email: "johndoe@vehicle.com",
+  password: "123456789",
+  confirm_password: "123456789",
+};
 function createUser() {
-  const user = {
-    name: "John Doe",
-    role: "admin",
-    email: "johndoe@vehicle.com",
-    password: "123456789",
-    confirm_password: "123456789",
-  };
   return surf.post(`${webserver.host}/api/v1/test`, { body: user });
 }
 function loginUser() {
@@ -19,7 +19,7 @@ function loginUser() {
   return surf.post(`${webserver.host}/api/v1/login`, { body: user });
 }
 function deleteUser() {
-  return fetch(`${webserver.host}/api/v1/test?email=johndoe@teste.com`, {
+  return fetch(`${webserver.host}/api/v1/test?email=${user.email}`, {
     method: "DELETE",
   });
 }
