@@ -1,15 +1,17 @@
 import validator from "models/validator";
-import { randomUUID } from "crypto";
 import surf from "models/surf";
-import jwt from "models/jwt";
 import { createVehicleEntryJson } from "models/definitions";
+import { randomUUID } from "node:crypto";
+import auth from "models/auth";
 
 export async function POST(req: Request) {
   try {
     const vehicleJson = await req.json();
-    const auth = surf.getAuthToken(req);
-    const decoded = jwt.verify(auth);
-    const vehicle = tryCreateVehicle(vehicleJson, decoded.id);
+    const isAuthenticated = await auth.isAuthenticated(req);
+    if (!isAuthenticated) {
+      return surf.response("Não autorizado", 401);
+    }
+    const vehicle = tryCreateVehicle(vehicleJson, isAuthenticated.id);
     return surf.response(vehicle, 200);
   } catch (error) {
     if (error instanceof Error) {
