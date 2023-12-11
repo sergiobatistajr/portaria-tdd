@@ -12,11 +12,7 @@ export async function POST(req: Request) {
     if (!isAuthenticated) {
       return surf.response("Não autorizado", 401);
     }
-    const vehicle = tryCreateVehicle(vehicleJson, isAuthenticated.id);
-    const findGuest = await guest.findByPlateAndStatus(vehicle?.plate!);
-    if (findGuest) {
-      throw new Error("Visitante já está dentro");
-    }
+    const vehicle = await tryCreateVehicle(vehicleJson, isAuthenticated.id);
     const deu = await guest.entryVehicle(vehicle!);
     return surf.response(deu, 200);
   } catch (error) {
@@ -35,7 +31,7 @@ export async function POST(req: Request) {
   }
 }
 
-function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
+async function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
   const dataToBeParsed = {
     id: randomUUID(),
     createdBy: userId,
@@ -49,8 +45,13 @@ function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
   };
   try {
     const result = validator.createVehicleEntry(dataToBeParsed);
-    if (result.success) return result.data;
-    else if (result.error) {
+    if (result.success) {
+      const findGuest = await guest.findByPlateAndStatus(result.data.plate);
+      if (findGuest) {
+        throw new Error("Visitante já está dentro");
+      }
+      return result.data;
+    } else if (result.error) {
       const errors = result.error.issues.map((issue) => issue.message);
       throw new Error(errors.join(", "));
     }
