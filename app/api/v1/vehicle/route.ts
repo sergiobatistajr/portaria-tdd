@@ -1,8 +1,9 @@
 import validator from "models/validator";
 import surf from "models/surf";
-import { createVehicleEntryJson } from "models/definitions";
+import { CreateVehicleEntryJson } from "models/definitions";
 import { randomUUID } from "node:crypto";
 import auth from "models/auth";
+import guest from "models/guest";
 
 export async function POST(req: Request) {
   try {
@@ -12,7 +13,8 @@ export async function POST(req: Request) {
       return surf.response("Não autorizado", 401);
     }
     const vehicle = tryCreateVehicle(vehicleJson, isAuthenticated.id);
-    return surf.response(vehicle, 200);
+    const deu = await guest.entryVehicle(vehicle!);
+    return surf.response(deu, 200);
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
@@ -29,7 +31,7 @@ export async function POST(req: Request) {
   }
 }
 
-function tryCreateVehicle(input: createVehicleEntryJson, userId: string) {
+function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
   const dataToBeParsed = {
     id: randomUUID(),
     createdBy: userId,
