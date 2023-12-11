@@ -36,7 +36,6 @@ export async function DELETE(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const plate = searchParams.get("plate");
-    console.log(plate);
     await guest.deleteGuestWPlateAndStatus(plate!);
     return new Response("Deleted", {
       status: 200,
