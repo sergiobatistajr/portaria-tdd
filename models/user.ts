@@ -24,7 +24,15 @@ async function findByEmail(email: string) {
   return result;
 }
 
+async function findById(id: string) {
+  const result = (
+    await database.sql("SELECT * FROM portaria.user where id = $1", [id])
+  ).rows[0];
+  return result;
+}
+
 export default Object.freeze({
   create,
   findByEmail,
+  findById,
 });
