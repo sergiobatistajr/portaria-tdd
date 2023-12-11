@@ -4,20 +4,21 @@ import testHelper from "./test.helper";
 import jwt from "../../../../../models/jwt";
 import { randomUUID } from "crypto";
 
+let token = "";
 describe("API for create Vehicle", () => {
-  let token: string = "";
-  beforeEach(async () => {
+  beforeAll(async () => {
     const response = await testHelper.createUser();
     expect(response.status).toEqual(201);
 
     const loginResponse = await testHelper.loginUser();
+
     expect(loginResponse.status).toEqual(200);
     expect(loginResponse.headers.getSetCookie()[0].split("=")[0]).toEqual(
       "auth",
     );
-    token = loginResponse.headers.getSetCookie()[0].split("=")[1];
+    token = loginResponse.headers.getSetCookie()[0].split("=")[1].split(";")[0];
   });
-  afterEach(async () => {
+  afterAll(async () => {
     const response = await testHelper.deleteUser();
     const bodyText = await response.text();
     expect(response.status).toEqual(200);
@@ -33,10 +34,16 @@ describe("API for create Vehicle", () => {
       pax: 2,
       observation: "opa",
     };
-    const response = await surf.post(`${webserver.host}/api/v1/vehicle`, {
-      token,
-      body: vehicle,
+    const response = await fetch(`${webserver.host}/api/v1/vehicle`, {
+      method: "POST",
+      headers: new Headers({
+        "Content-Type": "application/json",
+        "Set-Cookie": `auth=${token}; HttpOnly; Secure; SameSite=Strict`,
+      }),
+      body: JSON.stringify(vehicle),
     });
+    const body = await response.json();
+    console.log(body);
     expect(response.status).toEqual(200);
   });
   it("POST /vehicle should return unauthorized", async () => {
