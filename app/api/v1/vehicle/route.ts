@@ -3,7 +3,7 @@ import surf from "models/surf";
 import { CreateVehicleEntryJson } from "models/definitions";
 import { randomUUID } from "node:crypto";
 import auth from "models/auth";
-import guest from "models/guest";
+import vehicle from "models/vehicle";
 import { NextRequest } from "next/server";
 
 export async function POST(req: Request) {
@@ -13,8 +13,8 @@ export async function POST(req: Request) {
     if (!isAuthenticated) {
       return surf.response("Não autorizado", 401);
     }
-    const vehicle = await tryCreateVehicle(vehicleJson, isAuthenticated.id);
-    const deu = await guest.entryVehicle(vehicle!);
+    const newVehicle = await tryCreateVehicle(vehicleJson, isAuthenticated.id);
+    const deu = await vehicle.entryVehicle(newVehicle!);
     return surf.response(deu, 200);
   } catch (error) {
     if (error instanceof Error) {
@@ -36,7 +36,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const plate = searchParams.get("plate");
-    await guest.deleteGuestWPlateAndStatus(plate!);
+    await vehicle.deletePlateAndStatus(plate!);
     return new Response("Deleted", {
       status: 200,
     });
@@ -71,15 +71,10 @@ async function tryCreateVehicle(input: CreateVehicleEntryJson, userId: string) {
   try {
     const result = validator.createVehicleEntry(dataToBeParsed);
     if (result.success) {
-      const { plate, name } = result.data;
-      const isGuest = await guest.findByNameAndStatus(name, "inside");
-
-      if (isGuest) {
-        const isPlate = await guest.findByPlateAndStatus(plate, "inside");
-
-        if (isPlate) {
-          throw new Error("Visitante já está dentro");
-        }
+      const { plate } = result.data;
+      const isPlate = await vehicle.findByPlateAndStatus(plate, "inside");
+      if (isPlate) {
+        throw new Error("Visitante já está dentro");
       }
       return result.data;
     } else if (result.error) {

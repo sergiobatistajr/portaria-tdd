@@ -36,7 +36,7 @@ export async function DELETE(req: NextRequest) {
   try {
     const searchParams = req.nextUrl.searchParams;
     const name = searchParams.get("name") || "";
-    await guest.deleteGuestWNameAndStatus(name);
+    await guest.deleteByNameAndStatus(name);
     return new Response("Deleted", {
       status: 200,
     });
@@ -69,10 +69,7 @@ async function tryCreateGuest(input: CreateGuestEntryJson, userId: string) {
     const result = validator.createGuestEntry(dataToBeParsed);
     if (result.success) {
       const { name } = result.data;
-      const isGuest = await guest.findByNameAndStatusWithOutPlate(
-        name,
-        "inside",
-      );
+      const isGuest = await guest.findByNameAndStatus(name, "inside");
       if (isGuest) {
         throw new Error("Visitante já está dentro");
       }
