@@ -344,3 +344,58 @@ describe("Validator Create Vehicle Entry Tests", () => {
       );
   });
 });
+
+describe("Validator Create Guest Entry Tests", () => {
+  it("should return true for guest create", () => {
+    const inputFields = {
+      id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+      status: "inside",
+      name: "John Doe",
+      entryDate: new Date(),
+      createdBy: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+    };
+
+    const result = validator.createGuestEntry(inputFields);
+    expect(result.success).toEqual(true);
+  });
+  it("without lastname should return false for guest create", () => {
+    const inputFields = {
+      id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+      status: "inside",
+      name: "John",
+      entryDate: new Date(),
+      createdBy: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+    };
+
+    const result = validator.createGuestEntry(inputFields);
+    expect(result.success).toEqual(false);
+  });
+  it("seven days ahead entryDate should return false for guest create", () => {
+    const date = new Date();
+    const sevenDaysAhead = date.setDate(date.getDate() + 7);
+    const inputFields = {
+      id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+      status: "inside",
+      name: "John Doe",
+      entryDate: sevenDaysAhead,
+      createdBy: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+    };
+
+    const result = validator.createGuestEntry(inputFields);
+    expect(result.success).toEqual(false);
+  });
+  it("seven days ago entryDate should return false for guest create", () => {
+    const date = new Date();
+    const sevenDaysAgo = date.setDate(date.getDate() - 7);
+    const inputFields = {
+      id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+      status: "inside",
+      name: "John Doe",
+      entryDate: sevenDaysAgo,
+      createdBy: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
+    };
+
+    const result = validator.createGuestEntry(inputFields);
+    expect(result.success).toEqual(false);
+  });
+});

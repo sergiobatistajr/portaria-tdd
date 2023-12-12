@@ -17,6 +17,20 @@ function createVehicleEntry(inputFields: any) {
     .safeParse(inputFields);
   return validInputFields;
 }
+function createGuestEntry(inputFields: any) {
+  const validInputFields = z
+    .object({
+      id: idValidator,
+      name: nameValidator,
+      entryDate: entryDateValidator,
+      createdBy: idValidator,
+      status: guestStatusValidator,
+      apartment: apartmentsValidator,
+      observation: observationValidator,
+    })
+    .safeParse(inputFields);
+  return validInputFields;
+}
 
 function userCreate(inputFields: any) {
   const validInputFields = z
@@ -108,4 +122,5 @@ export default Object.freeze({
   userCreate,
   userLogin,
   createVehicleEntry,
+  createGuestEntry,
 });
