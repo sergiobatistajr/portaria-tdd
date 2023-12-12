@@ -1,5 +1,4 @@
 import vehicleTestHelper from "./vehicle.test.helper";
-import vehiclevehicleTestHelper from "./vehicle.test.helper";
 
 let token: string | undefined = "";
 const vehicle = {
