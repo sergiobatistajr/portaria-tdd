@@ -1,5 +1,5 @@
 import database from "infra/database";
-import { CreateVehicleEntry } from "./definitions";
+import { CreateGuestEntry, CreateVehicleEntry } from "./definitions";
 
 async function entryVehicle(vehicle: CreateVehicleEntry) {
   const result = (
@@ -21,7 +21,23 @@ async function entryVehicle(vehicle: CreateVehicleEntry) {
   ).rows[0];
   return result;
 }
-
+async function entryGuest(guest: CreateGuestEntry) {
+  const result = (
+    await database.sql(
+      "INSERT INTO portaria.guest (id, name, entryDate, observation, apartment, status, createdBy) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING * ",
+      [
+        guest.id,
+        guest.name,
+        guest.entryDate,
+        guest.observation,
+        guest.apartment,
+        guest.status,
+        guest.createdBy,
+      ],
+    )
+  ).rows[0];
+  return result;
+}
 async function findByPlateAndStatus(plate: string, status: string = "inside") {
   const result = (
     await database.sql(
@@ -40,6 +56,18 @@ async function findByNameAndStatus(name: string, status: string = "inside") {
   ).rows[0];
   return result;
 }
+async function findByNameAndStatusWithOutPlate(
+  name: string,
+  status: string = "inside",
+) {
+  const result = (
+    await database.sql(
+      "SELECT * FROM portaria.guest WHERE name = $1 AND status = $2 AND plate IS NULL",
+      [name, status],
+    )
+  ).rows[0];
+  return result;
+}
 
 async function deleteGuestWPlateAndStatus(
   plate: string,
@@ -50,10 +78,22 @@ async function deleteGuestWPlateAndStatus(
     [plate, status],
   );
 }
+async function deleteGuestWNameAndStatus(
+  name: string,
+  status: string = "inside",
+) {
+  return await database.sql(
+    "DELETE FROM portaria.guest WHERE name = $1 AND status = $2",
+    [name, status],
+  );
+}
 
 export default Object.freeze({
   entryVehicle,
+  entryGuest,
   findByPlateAndStatus,
   deleteGuestWPlateAndStatus,
   findByNameAndStatus,
+  deleteGuestWNameAndStatus,
+  findByNameAndStatusWithOutPlate,
 });

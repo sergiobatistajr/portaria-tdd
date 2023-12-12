@@ -39,12 +39,27 @@ export type CreateVehicleEntry = {
   observation?: string;
   status: "inside" | "outside" | "finished";
 };
+export type CreateGuestEntry = {
+  id: string;
+  name: string;
+  entryDate: Date;
+  createdBy: string;
+  apartment?: number;
+  observation?: string;
+  status: "inside" | "outside" | "finished";
+};
 export type CreateVehicleEntryJson = {
   name: string;
   entry_date: Date;
   plate: string;
   model: string;
   pax: number;
+  apartment?: number;
+  observation?: string;
+};
+export type CreateGuestEntryJson = {
+  name: string;
+  entry_date: Date;
   apartment?: number;
   observation?: string;
 };
