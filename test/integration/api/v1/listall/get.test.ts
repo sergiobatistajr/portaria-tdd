@@ -3,12 +3,12 @@ import webserver from "../../../../../infra/webserver";
 import listallTestHelper from "./listall.test.helper";
 
 describe("Test", () => {
-  let token = "";
+  let token: string | undefined = "";
   beforeAll(async () => {
     await listallTestHelper.createUser();
     const res = await listallTestHelper.loginUser();
-    token = res.headers.get("Set-Cookie")?.split("=")[1].split(";")[0]!;
-
+    expect(res.status).toEqual(200);
+    token = res.token;
     const createGuestsAndVehicles = [];
     for (let i = 10; i < 60; i++) {
       const guest = {
@@ -24,9 +24,11 @@ describe("Test", () => {
         pax: 2,
         observation: "opa",
       };
-      createGuestsAndVehicles.push(listallTestHelper.createGuest(guest, token));
       createGuestsAndVehicles.push(
-        listallTestHelper.createVehicle(vehicle, token),
+        listallTestHelper.createGuest(guest, token!),
+      );
+      createGuestsAndVehicles.push(
+        listallTestHelper.createVehicle(vehicle, token!),
       );
     }
     await Promise.all(createGuestsAndVehicles);
