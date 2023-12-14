@@ -51,11 +51,10 @@ describe("Test", () => {
   it("lista all", async () => {
     const res = await surf.get(`${webserver.host}/api/v1/listall`, {});
     const body = await res.json();
-    console.log(body);
     expect(body.length).toEqual(10);
     const expectedKeys = ["id", "name", "entry_date", "plate", "model"];
-    body.forEach((item: any) => {
-      expect(Object.keys(item).sort()).toEqual(expectedKeys.sort());
+    body.map((item: any) => {
+      return expect(Object.keys(item).sort()).toEqual(expectedKeys.sort());
     });
   });
 });
