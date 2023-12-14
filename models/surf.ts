@@ -16,17 +16,17 @@ async function post(
   if (initConfig.token)
     return fetch(url, {
       method: "POST",
-      headers: new Headers({
+      headers: {
         "Content-Type": "application/json",
-        "Set-Cookie": `auth=${initConfig.token}; HttpOnly; Secure; SameSite=Strict`,
-      }),
+        Authorization: `Bearer ${initConfig.token}`,
+      },
       body: JSON.stringify(initConfig.body),
     });
   return fetch(url, {
     method: "POST",
-    headers: new Headers({
+    headers: {
       "Content-Type": "application/json",
-    }),
+    },
     body: JSON.stringify(initConfig.body),
   });
 }
@@ -46,26 +46,27 @@ async function get(
   if (initConfig.token)
     return fetch(url, {
       method: "GET",
-      headers: new Headers({
+      headers: {
         "Content-Type": "application/json",
-        "Set-Cookie": `auth=${initConfig.token}; HttpOnly; Secure; SameSite=Strict`,
-      }),
+        Authorization: `Bearer ${initConfig.token}`,
+      },
     });
   return fetch(url, {
     method: "GET",
-    headers: new Headers({
+    headers: {
       "Content-Type": "application/json",
-    }),
+    },
   });
 }
 /**
  * Obtém o token de autenticação de uma requisição HTTP.
  *
- * @param req - A requisição HTTP de onde o token de autenticação será obtido.
- * @returns O token de autenticação obtido do cabeçalho "Set-Cookie" da requisição.
+ * @param api - A requisição HTTP ou a resposta HTTP de onde o token de autenticação será obtido.
+ * @returns O token de autenticação obtido do cabeçalho "Authorization" da requisição ou resposta.
  */
-function getAuthToken(req: Request) {
-  return req.headers.getSetCookie()[0].split(";")[0].split("=")[1];
+function getAuthToken(api: Request | Response) {
+  const token = api.headers.get("authorization");
+  return token?.split(" ")[1];
 }
 /**
  * Cria uma nova resposta HTTP.
@@ -83,9 +84,9 @@ function response(
   if (authToken) {
     return new Response(JSON.stringify(body), {
       status: status,
-      headers: new Headers({
-        "Set-Cookie": `auth=${authToken}; HttpOnly; Secure; SameSite=Strict`,
-      }),
+      headers: {
+        Authorization: `Bearer ${authToken}`,
+      },
     });
   }
   return new Response(JSON.stringify(body), {
