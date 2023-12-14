@@ -6,7 +6,11 @@ export async function GET() {
   const systemStatus = {
     updated_at: updateAt,
     dependecies: {
-      database: databaseStatus,
+      database: {
+        version: databaseStatus.version,
+        max_connections: parseInt(databaseStatus.maxConnections),
+        current_connections: parseInt(databaseStatus.currentConnections),
+      },
     },
   };
   return new Response(JSON.stringify(systemStatus), {
@@ -14,7 +18,7 @@ export async function GET() {
   });
 }
 async function getDatabaseStatus() {
-  const [version, max_connections, current_connections] = await Promise.all([
+  const [version, maxConnections, currentConnections] = await Promise.all([
     status.databaseVersion(),
     status.databaseMaxConnections(),
     status.databaseCurrentConnections(),
@@ -22,7 +26,7 @@ async function getDatabaseStatus() {
 
   return {
     version,
-    max_connections,
-    current_connections,
+    maxConnections,
+    currentConnections,
   };
 }
