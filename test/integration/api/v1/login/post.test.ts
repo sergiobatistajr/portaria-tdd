@@ -36,13 +36,14 @@ describe("Api POST for /login endpoint", () => {
     };
     const response = await fetch(`${webserver.host}/api/v1/login`, {
       method: "POST",
-      headers: new Headers({
+      headers: {
         "Content-Type": "application/json",
-      }),
+      },
       body: JSON.stringify(loginUser),
     });
 
     expect(response.status).toEqual(200);
-    expect(response.headers.getSetCookie()[0].split("=")[0]).toEqual("auth");
+    const isToken = response.headers.get("authorization")?.split(" ")[0];
+    expect(isToken).toEqual("Bearer");
   });
 });
