@@ -6,7 +6,7 @@ async function isAuthenticated(req: Request) {
   return await verifyAuth(token);
 }
 
-async function verifyAuth(token: string) {
+async function verifyAuth(token?: string) {
   if (!token) {
     return false;
   }
