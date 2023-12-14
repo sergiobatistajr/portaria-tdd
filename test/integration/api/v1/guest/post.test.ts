@@ -12,7 +12,7 @@ describe("API for create Vehicle", () => {
     await guestTestHelper.createUser();
     const resLoginUser = await guestTestHelper.loginUser();
     expect(resLoginUser.status).toEqual(200);
-    token = resLoginUser.headers.get("Set-Cookie")?.split("=")[1].split(";")[0];
+    token = resLoginUser.token;
   });
   afterAll(async () => {
     await guestTestHelper.deleteGuest(guest.name);
