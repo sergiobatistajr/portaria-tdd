@@ -1,3 +1,4 @@
+import surf from "../../../../../models/surf";
 import vehicleTestHelper from "./vehicle.test.helper";
 
 let token: string | undefined = "";
@@ -16,7 +17,7 @@ describe("API for create Vehicle", () => {
     await vehicleTestHelper.createUser();
     const resLoginUser = await vehicleTestHelper.loginUser();
     expect(resLoginUser.status).toEqual(200);
-    token = resLoginUser.headers.get("Set-Cookie")?.split("=")[1].split(";")[0];
+    token = resLoginUser.token;
   });
   afterAll(async () => {
     await vehicleTestHelper.deleteGuest(vehicle.plate);
