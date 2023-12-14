@@ -11,12 +11,17 @@ const user = {
 function createUser() {
   return surf.post(`${webserver.host}/api/v1/test`, { body: user });
 }
-function loginUser() {
+async function loginUser() {
   const user = {
     email: "johndoe@vehicle.com",
     password: "123456789",
   };
-  return surf.post(`${webserver.host}/api/v1/login`, { body: user });
+  const res = await surf.post(`${webserver.host}/api/v1/login`, { body: user });
+  const token = surf.getAuthToken(res);
+  return {
+    status: res.status,
+    token,
+  };
 }
 function deleteUser() {
   return fetch(`${webserver.host}/api/v1/test?email=${user.email}`, {
