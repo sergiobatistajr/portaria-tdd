@@ -6,27 +6,25 @@ async function listAllEntry(
   itemsPerPage = 10,
 ) {
   const offset = (currentPage - 1) * itemsPerPage;
-  const [totalRows, result] = await Promise.all([
-    (
-      await database.sql(
-        `SELECT COUNT(*) FROM (
-        SELECT id FROM portaria.guest WHERE name LIKE $1 OR CAST(entryDate AS TEXT) LIKE $1
+  const [totalRowsResult, rowsResult] = await Promise.all([
+    database.sql(
+      `SELECT COUNT(*) FROM (
+        SELECT id FROM portaria.guest WHERE name LIKE $1 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') LIKE $1
         UNION ALL 
-        SELECT id FROM portaria.vehicle WHERE name ILIKE $1 OR plate ILIKE $1 OR CAST(entryDate AS TEXT) ILIKE $1
+        SELECT id FROM portaria.vehicle WHERE name ILIKE $1 OR plate ILIKE $1 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') ILIKE $1
     ) AS total`,
-        [`%${searchTerm}%`],
-      )
-    ).rows[0].count,
-    (
-      await database.sql(
-        `SELECT id, name, entryDate, NULL AS plate, NULL AS model FROM portaria.guest WHERE name LIKE $3 OR CAST(entryDate AS TEXT) LIKE $3
+      [`%${searchTerm}%`],
+    ),
+    database.sql(
+      `SELECT id, name, entryDate, NULL AS plate, NULL AS model FROM portaria.guest WHERE name LIKE $3 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') LIKE $3
       UNION ALL 
-      SELECT id, name, entryDate, plate, model FROM portaria.vehicle WHERE name ILIKE $3 OR plate ILIKE $3 OR CAST(entryDate AS TEXT) ILIKE $3
+      SELECT id, name, entryDate, plate, model FROM portaria.vehicle WHERE name ILIKE $3 OR plate ILIKE $3 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') ILIKE $3
       ORDER BY entryDate LIMIT $1 OFFSET $2`,
-        [itemsPerPage, offset, `%${searchTerm}%`],
-      )
-    ).rows,
+      [itemsPerPage, offset, `%${searchTerm}%`],
+    ),
   ]);
+  const totalRows = totalRowsResult.rows[0].count;
+  const result = rowsResult.rows;
   const totalPages = Math.ceil(totalRows / itemsPerPage);
 
   return {
