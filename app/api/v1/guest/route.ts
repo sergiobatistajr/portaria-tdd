@@ -11,11 +11,15 @@ export async function POST(req: Request) {
     const guestJson = await req.json();
     const isAuthenticated = await auth.isAuthenticated(req);
     if (!isAuthenticated) {
-      return surf.response("Não autorizado", 401);
+      return surf.response("Não autorizado", {
+        status: 401,
+      });
     }
     const newGuest = await tryCreateGuest(guestJson, isAuthenticated.id);
-    const deu = await guest.entryGuest(newGuest!);
-    return surf.response(deu, 200);
+    await guest.entryGuest(newGuest!);
+    return surf.response(undefined, {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
