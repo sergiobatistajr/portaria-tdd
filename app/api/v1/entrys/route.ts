@@ -8,7 +8,7 @@ export async function GET(req: NextRequest) {
   const query = searchParams.get("query") || "";
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const isAuthenticated = auth.isAuthenticated(req);
+  const isAuthenticated = await auth.isAuthenticated(req);
   if (!isAuthenticated) {
     return surf.response("Não autorizado", {
       status: 401,

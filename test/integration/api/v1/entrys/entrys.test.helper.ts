@@ -40,14 +40,14 @@ function deleteVehicle(plate: string = "") {
 function createVehicle(vehicle: any, token: string) {
   return surf.post(`${webserver.host}/api/v1/vehicle`, {
     body: vehicle,
-    token,
+    authToken: token,
   });
 }
 
 function createGuest(guest: any, token: string) {
   return surf.post(`${webserver.host}/api/v1/guest`, {
     body: guest,
-    token,
+    authToken: token,
   });
 }
 

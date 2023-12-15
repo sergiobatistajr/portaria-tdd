@@ -55,7 +55,9 @@ describe("Test", () => {
   });
 
   it("GET /listall should return 10 guests and status 200", async () => {
-    const res = await surf.get(URL);
+    const res = await surf.get(URL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(body.guests.length).toEqual(10);
@@ -71,7 +73,9 @@ describe("Test", () => {
   it("GET /listall with invalid name should return status 200 and [] no guests", async () => {
     const name = "duaiudhaisuhduhisa";
     const queryURL = `${URL}?query=${name}`;
-    const res = await surf.get(queryURL);
+    const res = await surf.get(queryURL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(body.guests).toEqual([]);
@@ -80,7 +84,9 @@ describe("Test", () => {
   it("GET /listall with name should return status 200 and one guest", async () => {
     const name = "John Doe Listall 10";
     const queryURL = `${URL}?query=${name}`;
-    const res = await surf.get(queryURL);
+    const res = await surf.get(queryURL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
@@ -93,7 +99,9 @@ describe("Test", () => {
   it("GET /listall with plate should return status 200 and one vehicle", async () => {
     const plate = "FLK5E10";
     const queryURL = `${URL}?query=${plate}`;
-    const res = await surf.get(queryURL);
+    const res = await surf.get(queryURL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
@@ -107,7 +115,9 @@ describe("Test", () => {
   it("GET /listall with date should return status 200 and 10 guest", async () => {
     const today = new Date().toLocaleDateString();
     const queryURL = `${URL}?query=${today}`;
-    const res = await surf.get(queryURL);
+    const res = await surf.get(queryURL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
@@ -121,7 +131,9 @@ describe("Test", () => {
     const today = new Date().toISOString();
     const todayFormatted = date.formatDateToLocal(today);
     const queryURL = `${URL}?query=${todayFormatted}`;
-    const res = await surf.get(queryURL);
+    const res = await surf.get(queryURL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
