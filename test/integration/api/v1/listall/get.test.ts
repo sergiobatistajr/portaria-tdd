@@ -2,8 +2,8 @@ import surf from "../../../../../models/surf";
 import webserver from "../../../../../infra/webserver";
 import listallTestHelper from "./listall.test.helper";
 const URL = `${webserver.host}/api/v1/listall`;
-const expectedKeys = ["guests", "total_pages"];
-const expectedGuestKeys = ["id", "name", "entry_date", "plate", "model"];
+const expectedJSONKeys = ["guests", "total_pages"];
+const expectedJSONGuestKeys = ["id", "name", "entry_date", "plate", "model"];
 describe("Test", () => {
   let token: string | undefined = "";
   beforeAll(async () => {
@@ -56,31 +56,34 @@ describe("Test", () => {
     expect(res.status).toEqual(200);
     expect(body.guests.length).toEqual(10);
     expect(body.total_pages).toEqual(10);
-    expect(Object.keys(body).sort()).toEqual(expectedKeys.sort());
+    expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
     body.guests.map((guest: any) => {
       return expect(Object.keys(guest).sort()).toEqual(
-        expectedGuestKeys.sort(),
+        expectedJSONGuestKeys.sort(),
       );
     });
   });
-  // it("GET /listall with invalid name should return status 200 and [] no guests", async () => {
-  //   const name = "duaiudhaisuhduhisa";
-  //   const queryURL = `${URL}?query=${name}`;
-  //   const res = await surf.get(queryURL);
-  //   const body = await res.json();
-  //   expect(res.status).toEqual(200);
-  //   expect(body).toEqual([]);
-  // });
-  // it("GET /listall with name should return status 200 and one guest", async () => {
-  //   const name = "John Doe Listall 10";
-  //   const queryURL = `${URL}?query=${name}`;
-  //   const res = await surf.get(queryURL);
-  //   const body = await res.json();
-  //   expect(res.status).toEqual(200);
-  //   body.map((item: any) =>
-  //     expect(Object.keys(item).sort()).toEqual(expectedKeys.sort()),
-  //   );
-  // });
+  it("GET /listall with invalid name should return status 200 and [] no guests", async () => {
+    const name = "duaiudhaisuhduhisa";
+    const queryURL = `${URL}?query=${name}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(body.guests).toEqual([]);
+    expect(body.total_pages).toEqual(0);
+  });
+  it("GET /listall with name should return status 200 and one guest", async () => {
+    const name = "John Doe Listall 10";
+    const queryURL = `${URL}?query=${name}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
+    body.guests.map((item: any) =>
+      expect(Object.keys(item).sort()).toEqual(expectedJSONGuestKeys.sort()),
+    );
+    expect(body.total_pages).toEqual(1);
+  });
   // it("GET /listall with plate should return status 200 and one vehicle", async () => {
   //   const plate = "FLK5E10";
   //   const queryURL = `${URL}?query=${plate}`;
@@ -88,7 +91,7 @@ describe("Test", () => {
   //   const body = await res.json();
   //   expect(res.status).toEqual(200);
   //   body.map((item: any) =>
-  //     expect(Object.keys(item).sort()).toEqual(expectedKeys.sort()),
+  //     expect(Object.keys(item).sort()).toEqual(expectedJSONKeys.sort()),
   //   );
   //   expect(body[0].plate).toEqual(plate);
   // });
@@ -99,7 +102,7 @@ describe("Test", () => {
   //   const body = await res.json();
   //   expect(res.status).toEqual(200);
   //   body.map((item: any) =>
-  //     expect(Object.keys(item).sort()).toEqual(expectedKeys.sort()),
+  //     expect(Object.keys(item).sort()).toEqual(expectedJSONKeys.sort()),
   //   );
   //   expect(body.length).toEqual(10);
   //   // expect(body[0].plate).toEqual(plate);
