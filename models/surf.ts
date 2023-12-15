@@ -1,10 +1,10 @@
 type Body = Record<string, any> | string;
 type RequestInitGet = {
-  token?: string;
+  authToken?: string;
 };
 type RequestInitPost = {
   body: Body;
-  token?: string;
+  authToken?: string;
 };
 type ResponseInit = {
   status: number;
@@ -19,12 +19,12 @@ type ResponseInit = {
  * @returns Uma Promise que resolve para a resposta da requisição HTTP POST.
  */
 async function post(url: string, init: RequestInitPost) {
-  if (init.token)
+  if (init.authToken)
     return fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${init.token}`,
+        Authorization: `Bearer ${init.authToken}`,
       },
       body: JSON.stringify(init.body),
     });
@@ -49,7 +49,7 @@ async function get(url: string, init?: RequestInitGet) {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${init.token}`,
+        Authorization: `Bearer ${init.authToken}`,
       },
     });
   return fetch(url, {

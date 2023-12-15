@@ -36,7 +36,7 @@ function deleteGuest(name: string = "") {
 function createGuest(guest: any, token: string) {
   return surf.post(`${webserver.host}/api/v1/guest`, {
     body: guest,
-    token,
+    authToken: token,
   });
 }
 export default Object.freeze({
