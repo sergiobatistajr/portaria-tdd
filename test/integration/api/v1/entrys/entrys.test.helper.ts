@@ -56,9 +56,34 @@ function deleteGuest(name: string = "") {
     method: "DELETE",
   });
 }
-
+async function getGuest(guestName: string, authToken: string) {
+  const res = await surf.get(
+    `${webserver.host}/api/v1/entrys?query=${guestName}`,
+    {
+      authToken,
+    },
+  );
+  const body = await res.json();
+  return {
+    id: body.guests[0].id,
+  };
+}
+async function getVehicle(vhiclePlate: string, authToken: string) {
+  const res = await surf.get(
+    `${webserver.host}/api/v1/entrys?query=${vhiclePlate}`,
+    {
+      authToken,
+    },
+  );
+  const body = await res.json();
+  return {
+    id: body.guests[0].id,
+  };
+}
 export default Object.freeze({
   createVehicle,
+  getGuest,
+  getVehicle,
   createUser,
   createGuest,
   loginUser,
