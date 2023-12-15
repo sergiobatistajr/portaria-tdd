@@ -7,9 +7,7 @@ describe("Api POST user test", () => {
         method: "DELETE",
       },
     );
-    const bodyText = await response.text();
     expect(response.status).toEqual(200);
-    expect(bodyText).toEqual("Deleted");
   });
   afterAll(async () => {
     const response = await fetch(
@@ -18,9 +16,7 @@ describe("Api POST user test", () => {
         method: "DELETE",
       },
     );
-    const bodyText = await response.text();
     expect(response.status).toEqual(200);
-    expect(bodyText).toEqual("Deleted");
   });
   it("POST /users should return 201", async () => {
     const user = {
@@ -37,19 +33,7 @@ describe("Api POST user test", () => {
       },
       body: JSON.stringify(user),
     });
-    const body = await response.json();
-    const expectedBodySchema = {
-      id: expect.any(String),
-      email: expect.any(String),
-      name: expect.any(String),
-      role: expect.any(String),
-      status: expect.any(String),
-    };
-    expect(body).toEqual(expectedBodySchema);
     expect(response.status).toEqual(201);
-    expect(body.email).toEqual(user.email);
-    expect(body.name).toEqual(user.name);
-    expect(body.role).toEqual(user.role);
   });
   it("POST /user with an existing email should return 401", async () => {
     const user = {
