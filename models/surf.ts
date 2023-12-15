@@ -1,4 +1,4 @@
-type Body = Record<string, any>;
+type Body = Record<string, any> | string;
 type RequestInitGet = {
   token?: string;
 };
