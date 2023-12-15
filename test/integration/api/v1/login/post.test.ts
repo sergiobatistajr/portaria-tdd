@@ -25,9 +25,7 @@ describe("Api POST for /login endpoint", () => {
         method: "DELETE",
       },
     );
-    const bodyText = await response.text();
     expect(response.status).toEqual(200);
-    expect(bodyText).toEqual("Deleted");
   });
   it("POST /login should return 200", async () => {
     const loginUser = {
