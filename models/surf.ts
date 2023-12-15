@@ -36,6 +36,24 @@ async function post(url: string, init: RequestInitPost) {
     body: JSON.stringify(init.body),
   });
 }
+async function patch(url: string, init: RequestInitPost) {
+  if (init.authToken)
+    return fetch(url, {
+      method: "PATCH",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${init.authToken}`,
+      },
+      body: JSON.stringify(init.body),
+    });
+  return fetch(url, {
+    method: "PATCH",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(init.body),
+  });
+}
 /**
  * Realiza uma requisição HTTP GET para a URL especificada.
  *
@@ -93,6 +111,7 @@ function response(body: Body | null | undefined, init: ResponseInit): Response {
 export default Object.freeze({
   post,
   get,
+  patch,
   getAuthToken,
   response,
 });

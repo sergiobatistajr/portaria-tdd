@@ -22,12 +22,12 @@ describe("Test", () => {
     const createGuestsAndVehicles = [];
     for (let i = 10; i < 60; i++) {
       const guest = {
-        name: `John Doe Listall ${i}`,
+        name: `John Doe entrys ${i}`,
         entry_date: new Date(),
         observation: "Lista all",
       };
       const vehicle = {
-        name: `John Doe Listall vehicle ${i}`,
+        name: `John Doe entrys vehicle ${i}`,
         entry_date: new Date(),
         plate: `FLK5E${i}`,
         model: "Commander",
@@ -46,7 +46,7 @@ describe("Test", () => {
     const deleteGuestsAndVehicles = [];
     for (let i = 10; i < 60; i++) {
       deleteGuestsAndVehicles.push(
-        entrysTestHelper.deleteGuest(`John Doe Listall ${i}`),
+        entrysTestHelper.deleteGuest(`John Doe entrys ${i}`),
       );
       deleteGuestsAndVehicles.push(entrysTestHelper.deleteVehicle(`FLK5E${i}`));
     }
@@ -54,7 +54,7 @@ describe("Test", () => {
     await entrysTestHelper.deleteUser();
   });
 
-  it("GET /listall should return 10 guests and status 200", async () => {
+  it("GET /entrys should return 10 guests and status 200", async () => {
     const res = await surf.get(URL, {
       authToken: token,
     });
@@ -70,7 +70,7 @@ describe("Test", () => {
     });
     body.guests.map((guest: any) => expect(guest.status).toEqual("inside"));
   });
-  it("GET /listall with invalid name should return status 200 and [] no guests", async () => {
+  it("GET /entrys with invalid name should return status 200 and [] no guests", async () => {
     const name = "duaiudhaisuhduhisa";
     const queryURL = `${URL}?query=${name}`;
     const res = await surf.get(queryURL, {
@@ -81,8 +81,8 @@ describe("Test", () => {
     expect(body.guests).toEqual([]);
     expect(body.total_pages).toEqual(0);
   });
-  it("GET /listall with name should return status 200 and one guest", async () => {
-    const name = "John Doe Listall 10";
+  it("GET /entrys with name should return status 200 and one guest", async () => {
+    const name = "John Doe entrys 10";
     const queryURL = `${URL}?query=${name}`;
     const res = await surf.get(queryURL, {
       authToken: token,
@@ -96,7 +96,7 @@ describe("Test", () => {
     expect(body.total_pages).toEqual(1);
     body.guests.map((guest: any) => expect(guest.status).toEqual("inside"));
   });
-  it("GET /listall with plate should return status 200 and one vehicle", async () => {
+  it("GET /entrys with plate should return status 200 and one vehicle", async () => {
     const plate = "FLK5E10";
     const queryURL = `${URL}?query=${plate}`;
     const res = await surf.get(queryURL, {
@@ -112,7 +112,7 @@ describe("Test", () => {
     expect(body.total_pages).toEqual(1);
     body.guests.map((guest: any) => expect(guest.status).toEqual("inside"));
   });
-  it("GET /listall with date should return status 200 and 10 guest", async () => {
+  it("GET /entrys with date should return status 200 and 10 guest", async () => {
     const today = new Date().toLocaleDateString();
     const queryURL = `${URL}?query=${today}`;
     const res = await surf.get(queryURL, {
@@ -127,7 +127,7 @@ describe("Test", () => {
     expect(body.total_pages).toEqual(10);
     body.guests.map((guest: any) => expect(guest.status).toEqual("inside"));
   });
-  it("GET /listall with date and hour should return status 200 and 10 guest", async () => {
+  it("GET /entrys with date and hour should return status 200 and 10 guest", async () => {
     const today = new Date().toISOString();
     const todayFormatted = date.formatDateToLocal(today);
     const queryURL = `${URL}?query=${todayFormatted}`;
