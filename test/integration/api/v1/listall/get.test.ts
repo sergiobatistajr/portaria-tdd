@@ -79,22 +79,23 @@ describe("Test", () => {
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
-    body.guests.map((item: any) =>
-      expect(Object.keys(item).sort()).toEqual(expectedJSONGuestKeys.sort()),
+    body.guests.map((guest: any) =>
+      expect(Object.keys(guest).sort()).toEqual(expectedJSONGuestKeys.sort()),
     );
     expect(body.total_pages).toEqual(1);
   });
-  // it("GET /listall with plate should return status 200 and one vehicle", async () => {
-  //   const plate = "FLK5E10";
-  //   const queryURL = `${URL}?query=${plate}`;
-  //   const res = await surf.get(queryURL);
-  //   const body = await res.json();
-  //   expect(res.status).toEqual(200);
-  //   body.map((item: any) =>
-  //     expect(Object.keys(item).sort()).toEqual(expectedJSONKeys.sort()),
-  //   );
-  //   expect(body[0].plate).toEqual(plate);
-  // });
+  it("GET /listall with plate should return status 200 and one vehicle", async () => {
+    const plate = "FLK5E10";
+    const queryURL = `${URL}?query=${plate}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
+    body.guests.map((guest: any) =>
+      expect(Object.keys(guest).sort()).toEqual(expectedJSONGuestKeys.sort()),
+    );
+    expect(body.guests[0].plate).toEqual(plate);
+  });
   // it("GET /listall with date should return status 200 and 10 guest", async () => {
   //   const date = "2023-12";
   //   const queryURL = `${URL}?query=${date}`;
