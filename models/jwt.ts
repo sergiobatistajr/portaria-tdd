@@ -1,5 +1,5 @@
 import jwt, { SignOptions } from "jsonwebtoken";
-const jwtSecret = process.env.JWT_SECRET || "secret";
+const jwtSecret = process.env.JWT_SECRET!;
 const jwtSignConfig = {
   expiresIn: "1d",
 } satisfies SignOptions;
@@ -9,7 +9,7 @@ function sign(payload: { id: string; role: string }) {
   return token;
 }
 
-function verify<T = { id: string; role: string }>(token: string): T {
+function verify<T = { id: string; role: string }>(token: string) {
   return jwt.verify(token, jwtSecret) as T;
 }
 
