@@ -1,3 +1,4 @@
+import auth from "models/auth";
 import surf from "models/surf";
 import vehicleGuest from "models/vehicle-guest";
 import { NextRequest } from "next/server";
@@ -7,18 +8,39 @@ export async function GET(req: NextRequest) {
   const query = searchParams.get("query") || "";
   const currentPage = Number(searchParams.get("page")) || 1;
 
-  const { guests, totalPages } = await vehicleGuest.listAllEntry(
-    query,
-    currentPage,
-  );
+  const isAuthenticated = auth.isAuthenticated(req);
+  if (!isAuthenticated) {
+    return surf.response("Não autorizado", {
+      status: 401,
+    });
+  }
+  try {
+    const { guests, totalPages } = await vehicleGuest.listAllEntry(
+      query,
+      currentPage,
+    );
 
-  const resJSON = jsonFormater({
-    guests,
-    totalPages,
-  });
-  return surf.response(resJSON, {
-    status: 200,
-  });
+    const resJSON = jsonFormater({
+      guests,
+      totalPages,
+    });
+    return surf.response(resJSON, {
+      status: 200,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return surf.response(
+        {
+          error: {
+            message: error.message,
+          },
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+  }
 }
 function jsonFormater({ guests, totalPages }: JSONInput): JSONOutput {
   const guestsJson = guests.map((guest) => ({
