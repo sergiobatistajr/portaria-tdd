@@ -1,13 +1,11 @@
-import date from "models/date";
 import status from "models/status";
 import surf from "models/surf";
 
 export async function GET() {
-  const today = new Date().toISOString();
-  const formattedDate = date.formatDateToLocal(today);
+  const updateAt = new Date().toISOString();
   const databaseStatus = await getDatabaseStatus();
   const systemStatus = {
-    updated_at: formattedDate,
+    updated_at: updateAt,
     dependecies: {
       database: {
         version: databaseStatus.version,
