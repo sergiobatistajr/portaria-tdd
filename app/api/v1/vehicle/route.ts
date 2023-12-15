@@ -11,11 +11,15 @@ export async function POST(req: Request) {
     const vehicleJson = await req.json();
     const isAuthenticated = await auth.isAuthenticated(req);
     if (!isAuthenticated) {
-      return surf.response("Não autorizado", 401);
+      return surf.response("Não autorizado", {
+        status: 401,
+      });
     }
     const newVehicle = await tryCreateVehicle(vehicleJson, isAuthenticated.id);
-    const deu = await vehicle.entryVehicle(newVehicle!);
-    return surf.response(deu, 200);
+    await vehicle.entryVehicle(newVehicle!);
+    return surf.response(undefined, {
+      status: 200,
+    });
   } catch (error) {
     if (error instanceof Error) {
       return new Response(
