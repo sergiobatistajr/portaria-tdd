@@ -1,4 +1,5 @@
 import surf from "../../../../../models/surf";
+import date from "../../../../../models/date";
 import webserver from "../../../../../infra/webserver";
 import listallTestHelper from "./listall.test.helper";
 const URL = `${webserver.host}/api/v1/listall`;
@@ -95,17 +96,32 @@ describe("Test", () => {
       expect(Object.keys(guest).sort()).toEqual(expectedJSONGuestKeys.sort()),
     );
     expect(body.guests[0].plate).toEqual(plate);
+    expect(body.total_pages).toEqual(1);
   });
-  // it("GET /listall with date should return status 200 and 10 guest", async () => {
-  //   const date = "2023-12";
-  //   const queryURL = `${URL}?query=${date}`;
-  //   const res = await surf.get(queryURL);
-  //   const body = await res.json();
-  //   expect(res.status).toEqual(200);
-  //   body.map((item: any) =>
-  //     expect(Object.keys(item).sort()).toEqual(expectedJSONKeys.sort()),
-  //   );
-  //   expect(body.length).toEqual(10);
-  //   // expect(body[0].plate).toEqual(plate);
-  // });
+  it("GET /listall with date should return status 200 and 10 guest", async () => {
+    const today = new Date().toLocaleDateString();
+    const queryURL = `${URL}?query=${today}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
+    body.guests.map((guest: any) =>
+      expect(Object.keys(guest).sort()).toEqual(expectedJSONGuestKeys.sort()),
+    );
+    expect(body.total_pages).toEqual(10);
+  });
+  it("GET /listall with date and hour should return status 200 and 10 guest", async () => {
+    const today = new Date().toISOString();
+    const todayFormatted = date.formatDateToLocal(today);
+    console.log(todayFormatted);
+    const queryURL = `${URL}?query=${todayFormatted}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
+    body.guests.map((guest: any) =>
+      expect(Object.keys(guest).sort()).toEqual(expectedJSONGuestKeys.sort()),
+    );
+    expect(body.total_pages).toEqual(10);
+  });
 });
