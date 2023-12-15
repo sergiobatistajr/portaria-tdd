@@ -113,7 +113,6 @@ describe("Test", () => {
   it("GET /listall with date and hour should return status 200 and 10 guest", async () => {
     const today = new Date().toISOString();
     const todayFormatted = date.formatDateToLocal(today);
-    console.log(todayFormatted);
     const queryURL = `${URL}?query=${todayFormatted}`;
     const res = await surf.get(queryURL);
     const body = await res.json();
