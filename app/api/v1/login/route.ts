@@ -10,7 +10,12 @@ export async function POST(req: Request) {
     if (result.success) {
       const { email, password } = result.data;
       const token = await authenticateUser(email, password);
-      return surf.response(undefined, 200, token);
+      return surf.response(undefined, {
+        status: 200,
+        authToken: token,
+      });
+    } else {
+      throw new Error("500");
     }
   } catch (error) {
     if (error instanceof Error) {
