@@ -1,3 +1,4 @@
+import surf from "models/surf";
 import vehicleGuest from "models/vehicle-guest";
 import { NextRequest } from "next/server";
 
@@ -5,14 +6,19 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("query") || "";
   const currentPage = parseInt(searchParams.get("page")!) || 1;
-  const all = await vehicleGuest.listAllEntry(query, currentPage);
+  const guestsAndVehicles = await vehicleGuest.listAllEntry(query, currentPage);
+  const json = jsonFormater(guestsAndVehicles);
+  return surf.response(json, {
+    status: 200,
+  });
+}
 
-  const jsonResponse = all.map((item) => ({
-    id: item.id,
-    name: item.name,
-    entry_date: item.entrydate,
-    plate: item.plate,
-    model: item.model,
+function jsonFormater(data: any[]) {
+  return data.map((item) => ({
+    id: item.id as string,
+    name: item.name as string,
+    entry_date: item.entrydate as string,
+    plate: item.plate as string,
+    model: item.model as string,
   }));
-  return new Response(JSON.stringify(jsonResponse), { status: 200 });
 }
