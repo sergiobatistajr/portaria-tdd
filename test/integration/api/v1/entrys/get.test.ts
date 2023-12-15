@@ -1,15 +1,15 @@
 import surf from "../../../../../models/surf";
 import date from "../../../../../models/date";
 import webserver from "../../../../../infra/webserver";
-import listallTestHelper from "./listall.test.helper";
-const URL = `${webserver.host}/api/v1/listall`;
+import entrysTestHelper from "./entrys.test.helper";
+const URL = `${webserver.host}/api/v1/entrys`;
 const expectedJSONKeys = ["guests", "total_pages"];
 const expectedJSONGuestKeys = ["id", "name", "entry_date", "plate", "model"];
 describe("Test", () => {
   let token: string | undefined = "";
   beforeAll(async () => {
-    await listallTestHelper.createUser();
-    const res = await listallTestHelper.loginUser();
+    await entrysTestHelper.createUser();
+    const res = await entrysTestHelper.loginUser();
     expect(res.status).toEqual(200);
     token = res.token;
     const createGuestsAndVehicles = [];
@@ -27,11 +27,9 @@ describe("Test", () => {
         pax: 2,
         observation: "opa",
       };
+      createGuestsAndVehicles.push(entrysTestHelper.createGuest(guest, token!));
       createGuestsAndVehicles.push(
-        listallTestHelper.createGuest(guest, token!),
-      );
-      createGuestsAndVehicles.push(
-        listallTestHelper.createVehicle(vehicle, token!),
+        entrysTestHelper.createVehicle(vehicle, token!),
       );
     }
     await Promise.all(createGuestsAndVehicles);
@@ -41,14 +39,12 @@ describe("Test", () => {
     const deleteGuestsAndVehicles = [];
     for (let i = 10; i < 60; i++) {
       deleteGuestsAndVehicles.push(
-        listallTestHelper.deleteGuest(`John Doe Listall ${i}`),
+        entrysTestHelper.deleteGuest(`John Doe Listall ${i}`),
       );
-      deleteGuestsAndVehicles.push(
-        listallTestHelper.deleteVehicle(`FLK5E${i}`),
-      );
+      deleteGuestsAndVehicles.push(entrysTestHelper.deleteVehicle(`FLK5E${i}`));
     }
     await Promise.all(deleteGuestsAndVehicles);
-    await listallTestHelper.deleteUser();
+    await entrysTestHelper.deleteUser();
   });
 
   it("GET /listall should return 10 guests and status 200", async () => {

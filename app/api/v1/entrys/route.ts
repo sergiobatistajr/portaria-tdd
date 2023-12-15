@@ -6,10 +6,12 @@ export async function GET(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const query = searchParams.get("query") || "";
   const currentPage = Number(searchParams.get("page")) || 1;
+
   const { guests, totalPages } = await vehicleGuest.listAllEntry(
     query,
     currentPage,
   );
+
   const resJSON = jsonFormater({
     guests,
     totalPages,
