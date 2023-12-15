@@ -21,8 +21,6 @@ describe("API for create Vehicle", () => {
 
   it("POST /vehicle should return 200", async () => {
     const res = await guestTestHelper.createGuest(guest, token!);
-    const body = await res.json();
-    console.log(body);
     expect(res.status).toEqual(200);
   });
 });
