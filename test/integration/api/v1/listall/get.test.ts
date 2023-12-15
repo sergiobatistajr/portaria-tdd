@@ -1,7 +1,8 @@
 import surf from "../../../../../models/surf";
 import webserver from "../../../../../infra/webserver";
 import listallTestHelper from "./listall.test.helper";
-
+const URL = `${webserver.host}/api/v1/listall`;
+const expectedKeys = ["id", "name", "entry_date", "plate", "model"];
 describe("Test", () => {
   let token: string | undefined = "";
   beforeAll(async () => {
@@ -48,13 +49,32 @@ describe("Test", () => {
     await listallTestHelper.deleteUser();
   });
 
-  it("lista all", async () => {
-    const res = await surf.get(`${webserver.host}/api/v1/listall`, {});
+  it("GET /listall should return 10 guests and status 200", async () => {
+    const res = await surf.get(URL);
     const body = await res.json();
+    expect(res.status).toEqual(200);
     expect(body.length).toEqual(10);
     const expectedKeys = ["id", "name", "entry_date", "plate", "model"];
     body.map((item: any) => {
       return expect(Object.keys(item).sort()).toEqual(expectedKeys.sort());
     });
+  });
+  it("GET /listall should return status 200 and [] no guests", async () => {
+    const name = "duaiudhaisuhduhisa";
+    const queryURL = `${URL}?query=${name}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    expect(body).toEqual([]);
+  });
+  it("GET /listall should return status 200 and one guest", async () => {
+    const name = "John Doe Listall 10";
+    const queryURL = `${URL}?query=${name}`;
+    const res = await surf.get(queryURL);
+    const body = await res.json();
+    expect(res.status).toEqual(200);
+    body.map((item: any) =>
+      expect(Object.keys(item).sort()).toEqual(expectedKeys.sort()),
+    );
   });
 });
