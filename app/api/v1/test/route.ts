@@ -8,7 +8,7 @@ export async function DELETE(req: NextRequest) {
   const searchParams = req.nextUrl.searchParams;
   const email = searchParams.get("email");
   await database.sql("DELETE FROM portaria.user where email = $1", [email]);
-  return new Response("Deleted", {
+  return new Response(undefined, {
     status: 200,
   });
 }
