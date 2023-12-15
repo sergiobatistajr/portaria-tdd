@@ -1,3 +1,15 @@
+type Body = Record<string, any>;
+type RequestInitGet = {
+  token?: string;
+};
+type RequestInitPost = {
+  body: Body;
+  token?: string;
+};
+type ResponseInit = {
+  status: number;
+  authToken?: string;
+};
 /**
  * Realiza uma requisição HTTP POST para a URL especificada.
  *
@@ -6,28 +18,22 @@
  *                     O corpo da requisição é um objeto que será convertido em uma string JSON e enviado como o corpo da requisição HTTP POST.
  * @returns Uma Promise que resolve para a resposta da requisição HTTP POST.
  */
-async function post(
-  url: string,
-  initConfig: {
-    token?: string;
-    body: Record<string, any>;
-  },
-) {
-  if (initConfig.token)
+async function post(url: string, init: RequestInitPost) {
+  if (init.token)
     return fetch(url, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${initConfig.token}`,
+        Authorization: `Bearer ${init.token}`,
       },
-      body: JSON.stringify(initConfig.body),
+      body: JSON.stringify(init.body),
     });
   return fetch(url, {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
     },
-    body: JSON.stringify(initConfig.body),
+    body: JSON.stringify(init.body),
   });
 }
 /**
@@ -37,18 +43,13 @@ async function post(
  * @param initConfig - Um objeto de configuração que pode conter um token opcional.
  * @returns Uma Promise que resolve para a resposta da requisição HTTP GET.
  */
-async function get(
-  url: string,
-  initConfig: {
-    token?: string;
-  },
-) {
-  if (initConfig.token)
+async function get(url: string, init?: RequestInitGet) {
+  if (init)
     return fetch(url, {
       method: "GET",
       headers: {
         "Content-Type": "application/json",
-        Authorization: `Bearer ${initConfig.token}`,
+        Authorization: `Bearer ${init.token}`,
       },
     });
   return fetch(url, {
@@ -76,21 +77,17 @@ function getAuthToken(api: Request | Response) {
  * @param authToken - Um token de autenticação opcional. Se fornecido, um cabeçalho "Set-Cookie" será adicionado à resposta.
  * @returns Uma nova resposta HTTP com o corpo, status e cabeçalhos especificados.
  */
-function response(
-  body: string | Record<string, any> | undefined | null,
-  status: number,
-  authToken?: string,
-): Response {
-  if (authToken) {
+function response(body: Body | null | undefined, init: ResponseInit): Response {
+  if (init.authToken) {
     return new Response(JSON.stringify(body), {
-      status: status,
+      status: init.status,
       headers: {
-        Authorization: `Bearer ${authToken}`,
+        Authorization: `Bearer ${init.authToken}`,
       },
     });
   }
   return new Response(JSON.stringify(body), {
-    status: status,
+    status: init.status,
   });
 }
 export default Object.freeze({
