@@ -3,28 +3,17 @@ import user from "models/user";
 import password from "models/password";
 import { CreateUserJSON } from "models/definitions";
 import { randomUUID } from "node:crypto";
+import surf from "models/surf";
 
 export async function POST(req: Request) {
   const userParsed = await req.json();
   try {
-    const newUser = tryCreateUser(userParsed);
+    const newUser = await tryCreateUser(userParsed);
     if (newUser) {
-      const email = await user.findByEmail(newUser.email);
-      if (email) throw new Error("Email is already taken");
-      newUser.password = await password.hash(newUser.password);
-      const result = await user.create(newUser);
-      return new Response(
-        JSON.stringify({
-          id: result.id,
-          name: result.name,
-          email: result.email,
-          role: result.role,
-          status: result.status,
-        }),
-        {
-          status: 201,
-        },
-      );
+      await user.create(newUser);
+      return surf.response(undefined, {
+        status: 201,
+      });
     }
   } catch (error) {
     if (error instanceof Error) {
@@ -42,14 +31,25 @@ export async function POST(req: Request) {
   }
 }
 
-function tryCreateUser(data: CreateUserJSON) {
+async function tryCreateUser(data: CreateUserJSON) {
   try {
-    const user = generateUser(data);
-    const isValid = validator.userCreate(user);
-    if (isValid.success) {
-      return isValid.data;
-    } else if (isValid.error) {
-      const errors = isValid.error.issues.map((issue) => issue.message);
+    const userGenerate = generateUser(data);
+    const isUserValid = validator.userCreate(userGenerate);
+    if (isUserValid.success) {
+      const newUser = isUserValid.data;
+      const isEmail = await user.findByEmail(newUser.email);
+      if (isEmail) throw new Error("Email is already taken");
+      const hash = await password.hash(newUser.password);
+      return {
+        id: newUser.id,
+        name: newUser.name,
+        email: newUser.email,
+        password: hash,
+        role: newUser.role,
+        status: newUser.status,
+      };
+    } else if (isUserValid.error) {
+      const errors = isUserValid.error.issues.map((issue) => issue.message);
       throw new Error(errors.join(", "));
     }
   } catch (error) {
