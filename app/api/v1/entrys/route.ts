@@ -27,6 +27,7 @@ function jsonFormater({ guests, totalPages }: JSONInput): JSONOutput {
     entry_date: guest.entrydate,
     plate: guest.plate,
     model: guest.model,
+    status: guest.status,
   }));
 
   return {
@@ -45,6 +46,7 @@ type JSONOutput = {
     entry_date: string | null;
     plate: string | null;
     model: string | null;
+    status: string;
   }[];
   total_pages: number;
 };
