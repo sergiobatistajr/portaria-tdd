@@ -1,4 +1,3 @@
-import surf from "../../../../../models/surf";
 import vehicleTestHelper from "./vehicle.test.helper";
 
 let token: string | undefined = "";
@@ -26,7 +25,6 @@ describe("API for create Vehicle", () => {
 
   it("POST /vehicle should return 200", async () => {
     const res = await vehicleTestHelper.createVehicle(vehicle, token!);
-    console.log(await res.json());
     expect(res.status).toEqual(200);
   });
   it("POST /vehicle should return 401", async () => {
