@@ -1,4 +1,5 @@
 import status from "models/status";
+import surf from "models/surf";
 
 export async function GET() {
   const updateAt = new Date();
@@ -13,7 +14,7 @@ export async function GET() {
       },
     },
   };
-  return new Response(JSON.stringify(systemStatus), {
+  return surf.response(systemStatus, {
     status: 200,
   });
 }
