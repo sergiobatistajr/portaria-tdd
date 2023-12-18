@@ -4,7 +4,7 @@ import usersTestHelper from "./users.test.helper";
 const URL = `${webserver.host}/api/v1/users`;
 const expectedJSONKeys = ["users", "total_pages"];
 const expectedUserKeys = ["id", "name", "email", "role", "status"];
-
+let token = "";
 function manageUsers(action: "create" | "delete") {
   let users = [];
   for (let i = 0; i < 11; i++) {
@@ -23,16 +23,24 @@ function manageUsers(action: "create" | "delete") {
   }
   return users;
 }
-
+let user: any;
 describe("GET API USERS ENDPOINT", () => {
   beforeAll(async () => {
     await Promise.all(manageUsers("create"));
+    token = (
+      await usersTestHelper.loginUser({
+        email: "johndoe0@getusers.com",
+        password: "123456789",
+      })
+    ).token!;
   });
   afterAll(async () => {
     await Promise.all(manageUsers("delete"));
   });
   it("GET /users should return 200", async () => {
-    const res = await surf.get(URL);
+    const res = await surf.get(URL, {
+      authToken: token,
+    });
     const body = await res.json();
     expect(res.status).toEqual(200);
     expect(Object.keys(body).sort()).toEqual(expectedJSONKeys.sort());
