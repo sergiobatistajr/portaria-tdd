@@ -1,8 +1,7 @@
 import surf from "../../../../../../models/surf";
 import webserver from "../../../../../../infra/webserver";
 import usersTestHelper from "../users.test.helper";
-const URL = `${webserver.host}/users`;
-let id = "";
+const URL = `${webserver.host}/api/v1/users`;
 const user = {
   name: "John Doe",
   email: "johndoe@patchtest.com",
@@ -11,6 +10,7 @@ const user = {
   confirm_password: "123456789",
 };
 let token = "";
+let id = "";
 describe("Test PATCH users endpoint", () => {
   beforeAll(async () => {
     const resCreateUser = await usersTestHelper.createUser(user);
@@ -25,11 +25,17 @@ describe("Test PATCH users endpoint", () => {
   afterAll(async () => {
     await usersTestHelper.deleteUser(user);
   });
-  it("PATCH /users should return 200", async () => {
+  it("PATCH /users should return 401", async () => {
     const url = `${URL}/${id}`;
     const res = await surf.patch(url, {
-      body: { xd: "xd" },
+      body: {
+        name: "mememe mememe",
+        email: "diuashduhs@dasdas.com",
+        role: "asiudhaisuh",
+        status: "meme",
+      },
+      authToken: token,
     });
-    expect(res.status).toEqual(201);
+    expect(res.status).toEqual(401);
   });
 });
