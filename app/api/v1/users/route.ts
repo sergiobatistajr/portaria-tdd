@@ -5,8 +5,15 @@ import { CreateUserJSON } from "models/definitions";
 import { randomUUID } from "node:crypto";
 import surf from "models/surf";
 import snakeCase from "models/snake-case";
+import auth from "models/auth";
 export async function GET(req: Request) {
   try {
+    const isAuthenticated = await auth.isAuthenticated(req);
+    if (!isAuthenticated) {
+      return surf.response("Não autorizado", {
+        status: 401,
+      });
+    }
     const result = await user.findBySearch("");
     const resultSnakeCase = snakeCase.keysToSnakeCase(result);
     return surf.response(resultSnakeCase, {
