@@ -30,9 +30,35 @@ async function findById(id: string) {
   ).rows[0];
   return result;
 }
+async function findBySearch(
+  searchTerm = "",
+  currentPage = 1,
+  itemsPerPage = 10,
+) {
+  const offset = (currentPage - 1) * itemsPerPage;
+  const [totalRowsResult, rowsResult] = await Promise.all([
+    database.sql(
+      `SELECT COUNT (*) FROM portaria.user WHERE name ILIKE $1 OR email ILIKE $1 OR role ILIKE $1`,
+      [`%${searchTerm}%`],
+    ),
+    database.sql(
+      ` SELECT id, name, email, role, status FROM portaria.user WHERE name ILIKE $3 OR email ILIKE $3 OR role ILIKE $3 LIMIT $1 OFFSET $2`,
+      [itemsPerPage, offset, `%${searchTerm}%`],
+    ),
+  ]);
+  const totalRows = totalRowsResult.rows[0].count;
+  const result = rowsResult.rows;
+  const totalPages = Math.ceil(totalRows / itemsPerPage);
+
+  return {
+    users: result,
+    totalPages,
+  };
+}
 
 export default Object.freeze({
   create,
   findByEmail,
   findById,
+  findBySearch,
 });
