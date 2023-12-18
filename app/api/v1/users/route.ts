@@ -4,7 +4,29 @@ import password from "models/password";
 import { CreateUserJSON } from "models/definitions";
 import { randomUUID } from "node:crypto";
 import surf from "models/surf";
-
+import snakeCase from "models/snake-case";
+export async function GET(req: Request) {
+  try {
+    const result = await user.findBySearch("");
+    const resultSnakeCase = snakeCase.keysToSnakeCase(result);
+    return surf.response(resultSnakeCase, {
+      status: 200,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      return surf.response(
+        {
+          error: {
+            message: error.message,
+          },
+        },
+        {
+          status: 401,
+        },
+      );
+    }
+  }
+}
 export async function POST(req: Request) {
   const userParsed = await req.json();
   try {
