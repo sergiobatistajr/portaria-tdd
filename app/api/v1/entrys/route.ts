@@ -1,4 +1,5 @@
 import auth from "models/auth";
+import snakeCase from "models/snake-case";
 import surf from "models/surf";
 import vehicleGuest from "models/vehicle-guest";
 import { NextRequest } from "next/server";
@@ -15,16 +16,10 @@ export async function GET(req: NextRequest) {
     });
   }
   try {
-    const { guests, totalPages } = await vehicleGuest.listAllEntry(
-      query,
-      currentPage,
-    );
+    const result = await vehicleGuest.listAllEntry(query, currentPage);
+    const resultSnakeCase = snakeCase.deepKeysToSnakeCase(result);
 
-    const resJSON = jsonFormater({
-      guests,
-      totalPages,
-    });
-    return surf.response(resJSON, {
+    return surf.response(resultSnakeCase, {
       status: 200,
     });
   } catch (error) {
@@ -42,33 +37,3 @@ export async function GET(req: NextRequest) {
     }
   }
 }
-function jsonFormater({ guests, totalPages }: JSONInput): JSONOutput {
-  const guestsJson = guests.map((guest) => ({
-    id: guest.id,
-    name: guest.name,
-    entry_date: guest.entryDate,
-    plate: guest.plate,
-    model: guest.model,
-    status: guest.status,
-  }));
-
-  return {
-    guests: guestsJson,
-    total_pages: totalPages || 0,
-  };
-}
-type JSONInput = {
-  guests: any[];
-  totalPages: number | null;
-};
-type JSONOutput = {
-  guests: {
-    id: string;
-    name: string;
-    entry_date: string | null;
-    plate: string | null;
-    model: string | null;
-    status: string;
-  }[];
-  total_pages: number;
-};
