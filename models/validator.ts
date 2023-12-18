@@ -1,5 +1,17 @@
 import { z } from "zod";
 
+function GuestAndVehicleDepartureDate(inputFields: any) {
+  return z
+    .object({
+      entryDate: entryDateValidator,
+      departureDate: departureDateValidator,
+    })
+    .refine((data) => data.departureDate > data.entryDate, {
+      message: "Data de saída deve ser maior que a data de entrada.",
+    })
+    .safeParse(inputFields);
+}
+
 function createVehicleEntry(inputFields: any) {
   const validInputFields = z
     .object({
@@ -104,7 +116,7 @@ const entryDateValidator = z.coerce.date().refine(
       "A data de entrada deve estar entre 7 dias atrás e 7 dias à frente",
   },
 );
-const departureDateValitor = z.coerce.date().refine(
+const departureDateValidator = z.coerce.date().refine(
   (date) => {
     const sevenDaysAgo = new Date();
     sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 7);
@@ -123,4 +135,5 @@ export default Object.freeze({
   userLogin,
   createVehicleEntry,
   createGuestEntry,
+  GuestAndVehicleDepartureDate,
 });

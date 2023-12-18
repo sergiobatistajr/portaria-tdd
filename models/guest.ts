@@ -4,7 +4,7 @@ import { CreateGuestEntry } from "./definitions";
 async function entryGuest(guest: CreateGuestEntry) {
   const result = (
     await database.sql(
-      "INSERT INTO portaria.guest (id, name, entryDate, observation, apartment, status, createdBy) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING * ",
+      'INSERT INTO portaria.guest (id, name, "entryDate", observation, apartment, status, "createdBy") VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING * ',
       [
         guest.id,
         guest.name,
