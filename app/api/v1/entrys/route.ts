@@ -46,7 +46,7 @@ function jsonFormater({ guests, totalPages }: JSONInput): JSONOutput {
   const guestsJson = guests.map((guest) => ({
     id: guest.id,
     name: guest.name,
-    entry_date: guest.entrydate,
+    entry_date: guest.entryDate,
     plate: guest.plate,
     model: guest.model,
     status: guest.status,
