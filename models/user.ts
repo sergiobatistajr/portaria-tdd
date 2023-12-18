@@ -55,10 +55,28 @@ async function findBySearch(
     totalPages,
   };
 }
-
+async function update({
+  id,
+  name,
+  email,
+  role,
+  status,
+}: {
+  id: string;
+  name: string;
+  email: string;
+  role: string;
+  status: string;
+}) {
+  await database.sql(
+    `UPDATE portaria.user SET name = $1, email = $2, role = $3, status = $4 WHERE id = $5`,
+    [name, email, role, status, id],
+  );
+}
 export default Object.freeze({
   create,
   findByEmail,
   findById,
   findBySearch,
+  update,
 });
