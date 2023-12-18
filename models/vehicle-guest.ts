@@ -9,17 +9,17 @@ async function listAllEntry(
   const [totalRowsResult, rowsResult] = await Promise.all([
     database.sql(
       `SELECT COUNT(*) FROM (
-      SELECT id FROM portaria.guest WHERE (name LIKE $1 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') LIKE $1) AND status = 'inside'
+      SELECT id FROM portaria.guest WHERE (name LIKE $1 OR TO_CHAR("entryDate", 'DD/MM/YYYY, HH24:MI') LIKE $1) AND status = 'inside'
       UNION ALL 
-      SELECT id FROM portaria.vehicle WHERE (name ILIKE $1 OR plate ILIKE $1 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') ILIKE $1) AND status = 'inside'
+      SELECT id FROM portaria.vehicle WHERE (name ILIKE $1 OR plate ILIKE $1 OR TO_CHAR("entryDate", 'DD/MM/YYYY, HH24:MI') ILIKE $1) AND status = 'inside'
     ) AS total`,
       [`%${searchTerm}%`],
     ),
     database.sql(
-      `SELECT id, name, entryDate, status, NULL AS plate, NULL AS model FROM portaria.guest WHERE (name LIKE $3 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') LIKE $3) AND status = 'inside'
+      `SELECT id, name, "entryDate", status, NULL AS plate, NULL AS model FROM portaria.guest WHERE (name LIKE $3 OR TO_CHAR("entryDate", 'DD/MM/YYYY, HH24:MI') LIKE $3) AND status = 'inside'
     UNION ALL 
-    SELECT id, name, entryDate, status, plate, model FROM portaria.vehicle WHERE (name ILIKE $3 OR plate ILIKE $3 OR TO_CHAR(entryDate, 'DD/MM/YYYY, HH24:MI') ILIKE $3) AND status = 'inside'
-    ORDER BY entryDate LIMIT $1 OFFSET $2`,
+    SELECT id, name, "entryDate", status, plate, model FROM portaria.vehicle WHERE (name ILIKE $3 OR plate ILIKE $3 OR TO_CHAR("entryDate", 'DD/MM/YYYY, HH24:MI') ILIKE $3) AND status = 'inside'
+    ORDER BY "entryDate" LIMIT $1 OFFSET $2`,
       [itemsPerPage, offset, `%${searchTerm}%`],
     ),
   ]);
@@ -33,6 +33,31 @@ async function listAllEntry(
   };
 }
 
+async function findById(id: string) {
+  const [guestRows, vehicleRows] = await Promise.all([
+    await database.sql(`SELECT * FROM portaria.guest where id = $1`, [id]),
+    await database.sql(`SELECT * FROM portaria.vehicle where id = $1`, [id]),
+  ]);
+
+  return { guest: guestRows.rows[0], vehicle: vehicleRows.rows[0] };
+}
+
+async function departure(id: string, departureDate: Date) {
+  await Promise.all([
+    database.sql(
+      `UPDATE portaria.guest SET "departureDate" = $1 WHERE id = $2`,
+      [departureDate, id],
+    ),
+    database.sql(
+      `UPDATE portaria.vehicle SET "departureDate" = $1 WHERE id = $2`,
+      [departureDate, id],
+    ),
+  ]);
+  return;
+}
+
 export default Object.freeze({
   listAllEntry,
+  findById,
+  departure,
 });

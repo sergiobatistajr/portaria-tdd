@@ -4,7 +4,7 @@ import { CreateVehicleEntry } from "./definitions";
 async function entryVehicle(vehicle: CreateVehicleEntry) {
   const result = (
     await database.sql(
-      "INSERT INTO portaria.vehicle (id, name, entryDate, plate, model, pax, observation, apartment, status, createdBy) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING * ",
+      `INSERT INTO portaria.vehicle (id, name, "entryDate", plate, model, pax, observation, apartment, status, "createdBy") VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10) RETURNING * `,
       [
         vehicle.id,
         vehicle.name,
