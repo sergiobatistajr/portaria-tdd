@@ -1,6 +1,31 @@
 import validator from "../../models/validator";
 
 describe("Validator Create User Tests", () => {
+  it("Criar saída deve retornar erro quando tentar dar uma saída menor que a data de entrada", () => {
+    const inputFields = {
+      entryDate: new Date(),
+      departureDate: new Date(),
+    };
+
+    const result = validator.GuestAndVehicleDepartureDate(inputFields);
+
+    expect(result.success).toEqual(false);
+    if (result.success) {
+      return;
+    } else if (result.error)
+      expect(result.error.issues[0].message).toEqual(
+        "Data de saída deve ser maior que a data de entrada.",
+      );
+  });
+  it("Sapida deve ser lançada com sucesso", () => {
+    const inputFields = {
+      entryDate: new Date(),
+      departureDate: new Date(),
+    };
+    inputFields.departureDate.setDate(inputFields.departureDate.getDate() + 1);
+    const result = validator.GuestAndVehicleDepartureDate(inputFields);
+    expect(result.success).toEqual(true);
+  });
   it("should return valid input fields", () => {
     const inputFields = {
       id: "f42ecddb-f982-4702-b5c0-e1c5b878c80b",
