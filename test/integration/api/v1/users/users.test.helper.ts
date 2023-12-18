@@ -18,9 +18,14 @@ function deleteUser(user: any) {
     method: "DELETE",
   });
 }
-
+function findByEmail(email = "", token = "") {
+  return surf.get(`${webserver.host}/api/v1/users?query=${email}`, {
+    authToken: token,
+  });
+}
 export default Object.freeze({
   createUser,
   loginUser,
   deleteUser,
+  findByEmail,
 });
