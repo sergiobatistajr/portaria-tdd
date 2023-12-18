@@ -1,10 +1,9 @@
 import surf from "../../../../../models/surf";
 import webserver from "../../../../../infra/webserver";
-import entrysTestHelper from "./entrys.test.helper";
+import entrysTestHelper from "./departure.test.helper";
 
-const URL = `${webserver.host}/api/v1/entrys`;
+const URL = `${webserver.host}/api/v1/departure`;
 const departureDate = new Date();
-departureDate.setDate(departureDate.getDate() + 1);
 describe("Test", () => {
   let token: string | undefined = "";
   let vehicle: {
@@ -57,8 +56,9 @@ describe("Test", () => {
     await entrysTestHelper.deleteUser();
   });
 
-  it("PATCH /entrys/[id] should return status 200", async () => {
+  it("PATCH /departure/[id] should return status 200", async () => {
     const url = `${URL}/${vehicle.id}`;
+    departureDate.setDate(departureDate.getDate() + 1);
     const res = await surf.patch(url, {
       body: {
         departure_date: departureDate,
@@ -66,5 +66,48 @@ describe("Test", () => {
       authToken: token,
     });
     expect(res.status).toEqual(200);
+  });
+  it("PATCH /departure/[id] should return status 401", async () => {
+    const url = `${URL}/${vehicle.id}`;
+    departureDate.setDate(departureDate.getDate() - 1);
+    const res = await surf.patch(url, {
+      body: {
+        departure_date: departureDate,
+      },
+      authToken: token,
+    });
+    const body = await res.json();
+    expect(res.status).toEqual(401);
+    expect(body.error.message).toEqual(
+      "Data de saída deve ser maior que a data de entrada.",
+    );
+  });
+  it("PATCH /departure/[id] should return status 401", async () => {
+    const url = `${URL}/${vehicle.id}`;
+    departureDate.setDate(departureDate.getDate() + 1);
+    const res = await surf.patch(url, {
+      body: {
+        departure_date: departureDate,
+      },
+      authToken: "auysgduiyasgdiugasuyigduysagduygsa",
+    });
+    const body = await res.json();
+    expect(res.status).toEqual(401);
+    expect(body).toBeDefined();
+    expect(body.error.message).toEqual("jwt malformed");
+  });
+  it("PATCH /departure/[id] should return status 401", async () => {
+    const url = `${URL}/${vehicle.id}`;
+    departureDate.setDate(departureDate.getDate() + 1);
+    const res = await surf.patch(url, {
+      body: {
+        departure_date: departureDate,
+      },
+      authToken: "",
+    });
+    const body = await res.json();
+    expect(res.status).toEqual(401);
+    expect(body).toBeDefined();
+    expect(body).toEqual("Não autorizado");
   });
 });
