@@ -10,24 +10,24 @@ create table portaria.user (
 create table portaria.vehicle (
     id uuid,
     name text,
-    entryDate timestamp,
+    "entryDate" timestamp,
     plate text,
     model text,
     pax numeric,
     apartment numeric,
-    createdBy uuid,
+    "createdBy" uuid,
     observation text,
-    departureDate timestamp,
+    "departureDate" timestamp,
     status text
 )
 create table portaria.guest (
     id uuid,
     name text,
-    entryDate timestamp,
+    "entryDate" timestamp,
     apartment numeric,
-    createdBy uuid,
+    "createdBy" uuid,
     observation text,
-    departureDate timestamp,
+    "departureDate" timestamp,
     status text
 )
 INSERT INTO usuarios (id, nome, email, status, role, senha)
