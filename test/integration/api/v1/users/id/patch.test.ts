@@ -36,6 +36,8 @@ describe("Test PATCH users endpoint", () => {
       },
       authToken: token,
     });
+    const body = await res.json();
+    console.log(body.error.message);
     expect(res.status).toEqual(401);
   });
 });
