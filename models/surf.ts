@@ -10,13 +10,12 @@ type ResponseInit = {
   status: number;
   authToken?: string;
 };
+
 /**
- * Realiza uma requisição HTTP POST para a URL especificada.
- *
- * @param url - A URL para a qual a requisição será enviada.
- * @param initConfig - Um objeto de configuração que pode conter um token opcional e o corpo da requisição.
- *                     O corpo da requisição é um objeto que será convertido em uma string JSON e enviado como o corpo da requisição HTTP POST.
- * @returns Uma Promise que resolve para a resposta da requisição HTTP POST.
+ * Makes a POST request to the specified URL with the given options.
+ * @param url - The URL to send the request to.
+ * @param init - The options for the request.
+ * @returns A Promise that resolves to the response of the request.
  */
 async function post(url: string, init: RequestInitPost) {
   if (init.authToken)
@@ -36,6 +35,13 @@ async function post(url: string, init: RequestInitPost) {
     body: JSON.stringify(init.body),
   });
 }
+/**
+ * Sends a PATCH request to the specified URL with the provided options.
+ * If an authToken is provided, it will be included in the request headers.
+ * @param url - The URL to send the PATCH request to.
+ * @param init - The options for the PATCH request.
+ * @returns A Promise that resolves to the response of the PATCH request.
+ */
 async function patch(url: string, init: RequestInitPost) {
   if (init.authToken)
     return fetch(url, {
@@ -55,11 +61,10 @@ async function patch(url: string, init: RequestInitPost) {
   });
 }
 /**
- * Realiza uma requisição HTTP GET para a URL especificada.
- *
- * @param url - A URL para a qual a requisição será enviada.
- * @param initConfig - Um objeto de configuração que pode conter um token opcional.
- * @returns Uma Promise que resolve para a resposta da requisição HTTP GET.
+ * Makes a GET request to the specified URL.
+ * @param url - The URL to make the GET request to.
+ * @param init - Optional request initialization options.
+ * @returns A Promise that resolves to the response of the GET request.
  */
 async function get(url: string, init?: RequestInitGet) {
   if (init)
@@ -77,23 +82,22 @@ async function get(url: string, init?: RequestInitGet) {
     },
   });
 }
+
 /**
- * Obtém o token de autenticação de uma requisição HTTP.
- *
- * @param api - A requisição HTTP ou a resposta HTTP de onde o token de autenticação será obtido.
- * @returns O token de autenticação obtido do cabeçalho "Authorization" da requisição ou resposta.
+ * Retrieves the authentication token from the API request or response.
+ * @param api - The API request or response object.
+ * @returns The authentication token.
  */
 function getAuthToken(api: Request | Response) {
   const token = api.headers.get("authorization");
   return token?.split(" ")[1];
 }
+
 /**
- * Cria uma nova resposta HTTP.
- *
- * @param body - O corpo da resposta, que é um objeto que será convertido em uma string JSON.
- * @param status - O código de status HTTP da resposta.
- * @param authToken - Um token de autenticação opcional. Se fornecido, um cabeçalho "Set-Cookie" será adicionado à resposta.
- * @returns Uma nova resposta HTTP com o corpo, status e cabeçalhos especificados.
+ * Creates a new Response object with the specified body and initialization options.
+ * @param body - The body of the response.
+ * @param init - The initialization options for the response.
+ * @returns A new Response object.
  */
 function response(body: Body | null | undefined, init: ResponseInit): Response {
   if (init.authToken) {
