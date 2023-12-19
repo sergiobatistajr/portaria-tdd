@@ -19,7 +19,6 @@ async function sql(queryObject: string, values?: any[]) {
     return result;
   } catch (error) {
     console.error("Database query error", error);
-    throw error;
   }
 }
 
