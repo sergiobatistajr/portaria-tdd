@@ -1,5 +1,29 @@
 import { z } from "zod";
 
+/**
+ * Validates the user object for update.
+ *
+ * @param user - The user object to be validated.
+ * @returns A result object indicating whether the user object is valid or not.
+ */
+function userUpdate(user: any) {
+  return z
+    .object({
+      id: idValidator,
+      name: nameValidator,
+      email: emailValidator,
+      role: roleValidator,
+      status: userStatusValidator,
+    })
+    .safeParse(user);
+}
+
+/**
+ * Validates the guest and vehicle departure date.
+ *
+ * @param inputFields - The input fields containing the entry and departure dates.
+ * @returns The result of the validation.
+ */
 function GuestAndVehicleDepartureDate(inputFields: any) {
   return z
     .object({
@@ -12,6 +36,11 @@ function GuestAndVehicleDepartureDate(inputFields: any) {
     .safeParse(inputFields);
 }
 
+/**
+ * Creates a vehicle entry using the provided input fields.
+ * @param inputFields - The input fields for the vehicle entry.
+ * @returns A validation result object containing the parsed input fields.
+ */
 function createVehicleEntry(inputFields: any) {
   const validInputFields = z
     .object({
@@ -29,6 +58,11 @@ function createVehicleEntry(inputFields: any) {
     .safeParse(inputFields);
   return validInputFields;
 }
+/**
+ * Creates a guest entry with the provided input fields.
+ * @param inputFields - The input fields for the guest entry.
+ * @returns The validated input fields for the guest entry.
+ */
 function createGuestEntry(inputFields: any) {
   const validInputFields = z
     .object({
@@ -44,6 +78,12 @@ function createGuestEntry(inputFields: any) {
   return validInputFields;
 }
 
+/**
+ * Validates the input fields for creating a user.
+ *
+ * @param inputFields - The input fields to be validated.
+ * @returns The result of the validation process.
+ */
 function userCreate(inputFields: any) {
   const validInputFields = z
     .object({
@@ -61,6 +101,12 @@ function userCreate(inputFields: any) {
     .safeParse(inputFields);
   return validInputFields;
 }
+/**
+ * Validates the user login input.
+ *
+ * @param input - The user login input to be validated.
+ * @returns The validation result.
+ */
 function userLogin(input: any) {
   const validated = z
     .object({
@@ -136,4 +182,5 @@ export default Object.freeze({
   createVehicleEntry,
   createGuestEntry,
   GuestAndVehicleDepartureDate,
+  userUpdate,
 });
